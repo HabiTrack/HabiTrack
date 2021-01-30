@@ -136,7 +136,7 @@ exports.validateUserUpdate = async (data) => {
     }
 
     // Check password
-    if (data.password.length < 6) {
+    if (data.password && data.password.length < 6) {
         errors.password="Password must have at least 6 characters!";
         isValid = false;
     }

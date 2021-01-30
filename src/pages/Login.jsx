@@ -50,9 +50,7 @@ export default function Login() {
           </Button>
         
       </FormControl>
-    </Grid>
+      </Grid>
     </Box>
-
-   
   );
 }

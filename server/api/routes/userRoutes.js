@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const validation = require('../../validation/validation');
 const bcrypt = require('bcryptjs');
+const tokenauth = require('../../middleware/tokenauth');
 
 // User model
 const User = require("../../models/userModel");
@@ -41,7 +42,7 @@ router.post("/create", async (req, res) => {
 });
 
 // Update user information
-router.post("/update", async (req, res) => {
+router.post("/update", tokenauth.verifyToken, async (req, res) => {
     try {
         // Validation
         const {errors, isValid} = await validation.validateUserUpdate(req.body);
@@ -81,7 +82,7 @@ router.post("/update", async (req, res) => {
 });
 
 // Hide user
-router.post("/hide", async (req, res) => {
+router.post("/hide", tokenauth.verifyToken, async (req, res) => {
     try {
         await User.updateOne({_id: req.body.id}, {isDeleted: true});
         res.sendStatus(200);

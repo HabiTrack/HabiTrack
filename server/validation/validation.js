@@ -69,3 +69,48 @@ exports.validateUserCreate = async (data) => {
     // Return errors and isValid to calling function
     return {errors, isValid}
 }
+
+/* 
+Validates login data
+Returns {errors(json object), isValid(bool), user(json object)}
+*/
+exports.validateLogin = async (data) => {
+    let errors = {};
+    let isValid = true;
+    let user = {};
+
+    //validate the email is present
+    if (!data.email) {
+        errors.email = "Email cannot be empty";
+        isValid = false;
+    }
+
+    //validate the password is present
+    if (!data.password) {
+        errors.pasword = "Password cannot be empty";
+        isValid = false; 
+    }
+
+    //validate the email corresponds with a user object in the db
+    if (data.email) {
+        user = await User.findOne({email: data.email});
+        if (!user) {
+            errors.email = "Email does not correspond to a user account";
+            isValid = false;
+        }
+    }
+
+    //validate the password is valid
+    if (data.password && user) {
+        let isMatch = await bcrypt.compare(data.password, user.password);
+        if (!isMatch) {
+            errors.password = "Incorrect password";
+            isValid = false;
+        }
+    }
+
+    //return
+    return {errors, isValid, user};
+}
+
+

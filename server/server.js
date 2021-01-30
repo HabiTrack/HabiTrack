@@ -23,9 +23,9 @@ mongoose.connect(process.env.MONGODB_CONNECT, {
 });
 
 //api routes
-//app.use("/api/users", require("./routes/api/userRouter"));
 app.use("/api/users", require("./api/routes/userRoutes"));
 app.use("/api/auth", require("./api/routes/authRoutes"));
+app.use("/api/habits", require("./api/routes/habitRoutes"));
 
 //start server
 const PORT = process.env.PORT || 5000;

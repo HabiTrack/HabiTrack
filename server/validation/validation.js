@@ -24,6 +24,15 @@ exports.validateUserCreate = async (data) => {
         }
     }
 
+    // Check if email is properly formatted
+    if(data.email) {
+        var format = /\S+@\S+\.\S+/;
+        if(!format.test(data.email)) {
+            errors.email = "Email is not properly formatted!";
+            isValid = false;
+        }
+    }
+
     // Check first name
     if (!data.firstname) {
         errors.firstname = "First name field is required!";

@@ -10,6 +10,7 @@ router.get("/test", (req, res) => {
     res.status(200).send("Welcome to the api: User Routes");
 });
 
+// Create a new user
 router.post("/create", async (req, res)=> {
     try {
         // Validation

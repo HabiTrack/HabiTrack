@@ -4,6 +4,8 @@ import '@mobiscroll/react/dist/css/mobiscroll.min.css';
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
+import "../styles/login.css"
+import { Day } from "@material-ui/pickers";
 
 mobiscroll.setOptions({
   theme: 'ios',
@@ -45,6 +47,23 @@ const [calendarType, setCalendarType] = React.useState('week');
 
 const [startDate, setStartDate] = useState(new Date());
 
+let message;
+if (startDate.valueText) {
+  message = <div>
+    <div className="title">
+      {startDate.valueText} Habits 
+    </div>
+    FIller text: The FitnessGram Pacer Test is a multistage aerobic capacity test that progressively gets more difficult as it continues. The 20 meter pacer test will begin in 30 ...
+  </div>
+} else {
+  message = <div className="title">
+    Please select a date
+  </div>
+}
+
+
+
+
 return (
     <div>
     <Grid container spacing={3}>
@@ -85,10 +104,17 @@ return (
         <Grid item xs={5}>
           <Paper className={classes.paper}>
             {/* Here goes the stats */}
-            {console.log(startDate)}:
-            FIller text: The FitnessGram Pacer Test is a multistage aerobic capacity test that progressively gets more difficult as it continues. The 20 meter pacer test will begin in 30 ...
+            {console.log(startDate.valueText)}
+            {message}
           </Paper>
         </Grid>
+
+        <Grid item xs={5}>
+          <div className="red"> Red Circle - No habbits completed this day <br/></div>
+          <div className="yellow"> Yellow Circle - Some habbits completed this day <br/> </div>
+          <div className="green"> Green Circle - All Habits completed this day <br/> </div>
+        </Grid>
+       
       </Grid>
     </div>
   ); 
@@ -126,7 +152,7 @@ return (
 // // loop throug the routines
 // for (var i = 0; i < routines.length; i++) {
 //   // loop through the habits in this routine
-//   const numCompleted = 0;
+//   let numCompleted = 0;
 //   const totalHabits = routines[i].habits.length;
 //   for (var j = 0; j < totalHabits; j++) {
 //     if(routines[i].habits[j].completed){

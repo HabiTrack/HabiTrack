@@ -45,3 +45,40 @@
     justify-content: center;
     align-items: center;
 }
+
+.biggerRed {
+    font-size: 25px;
+    color: red;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.redError {
+    color: red;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.bottomMargin {
+    margin-bottom: 10px !important;
+}
+
+.biggerGreen{
+    font-size: 25px;
+    color: green;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.blueLinkWithMargin {
+    color:blue !important;
+    margin-bottom: 15px !important;
+}

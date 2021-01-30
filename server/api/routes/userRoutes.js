@@ -13,24 +13,26 @@ router.get("/test", (req, res) => {
 router.post("/create", async (req, res)=> {
     try {
         // Validation
+        const {errors, isValid} = await validation.validateUserCreate(req.body);
+        if (!isValid) {
+            return res.status(400).json({user: {}, isValid: isValid, errors: errors});
+        }
 
-
-        // 
+        // Hash the password
         const salt = await bcrypt.genSalt();
         const pswHash = await bcrypt.hash(req.body.password, salt);
 
+        // Create a new user
         const newUser = new User({
             firstname: req.body.firstname,
             lastname: req.body.lastname,
             email: req.body.email,
-            password: pswHash,
-            datecreated: Date.now(),
-            dateupdated: Date.now()
+            password: pswHash
         });
 
         // Save user schema to DB
         const savedUser = await newUser.save();
-        return res.status(200).json({user: savedUser});
+        return res.status(200).json({user: {}, isValid: isValid, errors: errors});
     } catch (err) {
         res.status(500).json({serverError: err.message, isValid: false});
     }

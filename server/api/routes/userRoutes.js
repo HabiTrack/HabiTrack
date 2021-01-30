@@ -7,6 +7,9 @@ const tokenauth = require('../../middleware/tokenauth');
 const User = require("../../models/userModel");
 const { update } = require('../../models/userModel');
 
+// Routine model
+const Routine = require("../../models/routineModel");
+
 // Test route
 router.get("/test", (req, res) => {
     res.status(200).send("Welcome to the api: User Routes");
@@ -25,16 +28,22 @@ router.post("/create", async (req, res) => {
         const salt = await bcrypt.genSalt();
         const pswHash = await bcrypt.hash(req.body.password, salt);
 
+        // Create a new routine
+        const newRoutine = new Routine();
+        const routineId = newRoutine._id.toString();
+
         // Create a new user
         const newUser = new User({
             firstname: req.body.firstname,
             lastname: req.body.lastname,
             email: req.body.email,
-            password: pswHash
+            password: pswHash,
+            routines: {routineId}
         });
 
         // Save user schema to DB
         const savedUser = await newUser.save();
+        const saveRoutine =  await newRoutine.save();
         
         res.status(200).json({user: newUser, isValid: isValid, errors: errors});
     } catch (err) {

@@ -50,6 +50,12 @@ router.post("/update", tokenauth.verifyToken, async (req, res) => {
             return res.status(400).json({isValid: isValid, errors: errors});
         }
 
+        // Check if an id was provided
+        if (!req.body.id) {
+            console.log("User id was not provided.");
+            return res.sendStatus(500);
+        }
+
         // Updates JSON object
         let updates = {};
 
@@ -84,6 +90,12 @@ router.post("/update", tokenauth.verifyToken, async (req, res) => {
 // Hide user
 router.post("/hide", tokenauth.verifyToken, async (req, res) => {
     try {
+        // Check if an id was provided
+        if (!req.body.id) {
+            console.log("User id was not provided.");
+            return res.sendStatus(500);
+        }
+
         await User.updateOne({_id: req.body.id}, {isDeleted: true});
         res.sendStatus(200);
     } catch (err) {

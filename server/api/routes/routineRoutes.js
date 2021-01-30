@@ -1,8 +1,9 @@
 const router = require('express').Router();
 const validation = require('../../validation/validation');
 const tokenauth = require('../../middleware/tokenauth');
+const Routine = require('../../models/routineModel');
 
-const Routine = require('../../models/habitModel');
+const habitTemplate = {};
 
 //test route for api habit routes
 router.get("/test", (req, res) => {
@@ -11,7 +12,7 @@ router.get("/test", (req, res) => {
 
 //route for creating a new habit
 router.post("/create", tokenauth.verifyToken, (req, res)=>{
-    //user id: 
+    
 });
 
 module.exports = router;

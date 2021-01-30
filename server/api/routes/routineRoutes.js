@@ -62,7 +62,7 @@ router.get("/gethabits", tokenauth.verifyToken, async (req, res) => {
         }
 
         // Fetch routines
-        let routineObjs = await Routine.find({$or: conditions});
+        let routineObjs = await Routine.find({$or: conditions}, {date: 1, habits: 1});
 
         // Return rountines
         return res.status(200).json({routineObjs});

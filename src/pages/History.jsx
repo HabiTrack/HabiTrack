@@ -109,10 +109,10 @@ return (
           </Paper>
         </Grid>
 
-        <Grid item xs={5}>
-          <div className="red"> Red Circle - No habbits completed this day <br/></div>
-          <div className="yellow"> Yellow Circle - Some habbits completed this day <br/> </div>
-          <div className="green"> Green Circle - All Habits completed this day <br/> </div>
+        <Grid item xs={7}>
+          <div className="red"> No habbits completed this day <br/></div>
+          <div className="yellow"> Some habbits completed this day <br/> </div>
+          <div className="green"> All Habits completed this day <br/> </div>
         </Grid>
        
       </Grid>

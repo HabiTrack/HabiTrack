@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const jwt = require("jsonwebtoken");
 const validation = require('../../validation/validation');
+const tokenauth = require('../../middleware/tokenauth');
 
 const User = require("../../models/userModel");
 
@@ -29,5 +30,10 @@ router.post("/login", async (req, res)=> {
     }
     res.sendStatus(200);
 });
+
+//validate token valid route
+router.post("/validatetoken", tokenauth.verifyToken, (req, res) => {
+    return res.status(200).json({isValid: true});
+});  
 
 module.exports = router;

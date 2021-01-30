@@ -3,6 +3,7 @@ const validation = require('../../validation/validation');
 const tokenauth = require('../../middleware/tokenauth');
 const Routine = require('../../models/routineModel');
 const User = require('../../models/userModel');
+const mongoose = require('mongoose');
 
 //test route for api habit routes
 router.get("/test", (req, res) => {
@@ -19,8 +20,12 @@ router.post("/addhabit", tokenauth.verifyToken, async (req, res)=>{
             return res.status(400).json({errors: errors, isValid: isValid});
         }
 
+        // Generate an id for the habit
+        let id = mongoose.Types.ObjectId();
+
         //build habit template
         let habit = {};
+        habit.id = id;
         habit.title = req.body.title;
         habit.trigger = req.body.trigger;
         habit.type = req.body.type;
@@ -39,6 +44,30 @@ router.post("/addhabit", tokenauth.verifyToken, async (req, res)=>{
         return res.status(200).json({habit});
     } catch (err) {
         res.status(500).json({serverError: err.message, isValid: false});
+    }
+});
+
+// Delete habit
+router.post("/deletehabit", tokenauth.verifyToken, async (req, res) => {
+    try {
+        // Check if an id was provided
+        if (!req.body.routineId) {
+            console.log("Habit id was not provided.");
+            return res.sendStatus(500);
+        }
+
+        let routineData = await Routine.findOne({_id: req.body.routineId}, {habits: 1});
+        let habitsData = routineData.habits;
+
+        habitsData = habitsData.filter(function(item) {
+            return item.id !== req.body.routineId;
+        });
+
+        await Routine.updateOne({_id: req.body.routineId}, {habits: habitsData, dateupdated: Date.now()});
+        res.sendStatus(200);
+    } catch {
+        console.error(err);
+        return res.sendStatus(500); 
     }
 });
 

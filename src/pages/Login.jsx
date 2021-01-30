@@ -43,9 +43,8 @@ export default function Login() {
       localStorage.setItem("auth-token", response.data.token);
       //set axios default header for the token
       Axios.defaults.headers.common['Authorization'] = "Bearer " + response.data.token;
-      
-      setIsValid(response.data.isValid);
-      setErrors({});
+
+      history.push("/");
     } catch (err) {
       setIsValid(err.response.data.isValid);
       setErrors(err.response.data.errors);

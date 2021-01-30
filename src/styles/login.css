@@ -24,12 +24,24 @@
 
 .red {
     color: red;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .yellow {
     color: yellow;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .green {
     color: green;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

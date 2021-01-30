@@ -3,7 +3,7 @@ const validation = require('../../validation/validation');
 const bcrypt = require('bcryptjs');
 
 // User model
-const User = require("../../models/user-model");
+const User = require("../../models/userModel");
 
 // Test route
 router.get("/test", (req, res) => {
@@ -35,3 +35,5 @@ router.post("/create", async (req, res)=> {
         res.status(500).json({serverError: err.message, isValid: false});
     }
 });
+
+module.exports = router;

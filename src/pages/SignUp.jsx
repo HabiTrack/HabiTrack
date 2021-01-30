@@ -57,20 +57,20 @@ export default function SignUp() {
      <Grid container justify = "center">
       <FormControl component="fieldset">
           <FormLabel className="center fontSize" component="legend">Sign Up</FormLabel>
-          {isValid === true && <p>User Registered Successfully</p>}
-          {isValid === true && <div><Button onClicke={handleSignUp}>login</Button></div>}
-          {isValid === false && <p>Registration failed</p>}
+          {isValid === true && <div className="biggerGreen">User Registered Successfully</div>}
+          {isValid === true && <div className="center"><Button className="blueLinkWithMargin" onClick={handleSignUp}><u>Click Here to Login</u></Button></div>}
+          {isValid === false && <div className="biggerRed"><u>Registration failed</u></div>}
           <FormGroup>
-            <TextField id="firstName" variant="outlined" label="First Name" onChange={(e) => setFirstName(e.target.value)}/>
-            {errors.firstname && <div>{errors.firstname}</div>}
-            <TextField id="lastName" label="Last Name" variant="outlined" onChange={(e) => setLastName(e.target.value)}/>
-            {errors.lastname && <div>{errors.lastname}</div>}
-            <TextField id="email" label="Email" variant="outlined" onChange={(e) => setEmail(e.target.value)}/>
-            {errors.email && <div>{errors.email}</div>}
-            <TextField id="password" label="Password" variant="outlined" onChange={(e) => setPassword(e.target.value)}/>
-            {errors.password && <div>{errors.password}</div>}
-            <TextField id="confirmPassword" label="Confirm Password" variant="outlined" onChange={(e) => setPasswordCheck(e.target.value)}/>
-            {errors.passwordCheck && <div>{errors.passwordCheck}</div>}
+            {errors.firstname && <div className="redError">{errors.firstname}</div>}
+            <TextField id="firstName" className="bottomMargin" variant="outlined" label="First Name" onChange={(e) => setFirstName(e.target.value)}/>
+            {errors.lastname && <div className="redError">{errors.lastname}</div>}
+            <TextField id="lastName" className="bottomMargin" label="Last Name" variant="outlined" onChange={(e) => setLastName(e.target.value)}/>
+            {errors.email && <div className="redError">{errors.email}</div>}
+            <TextField id="email" className="bottomMargin" label="Email" variant="outlined" onChange={(e) => setEmail(e.target.value)}/>
+            {errors.password && <div className="redError">{errors.password}</div>}
+            <TextField id="password" className="bottomMargin" label="Password" variant="outlined" onChange={(e) => setPassword(e.target.value)}/>
+            {errors.passwordCheck && <div className="redError">{errors.passwordCheck}</div>}
+            <TextField id="confirmPassword" className="bottomMargin" label="Confirm Password" variant="outlined" onChange={(e) => setPasswordCheck(e.target.value)}/>
           </FormGroup>
           <Button
             variant="contained"

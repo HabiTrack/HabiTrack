@@ -38,7 +38,7 @@ router.post("/create", async (req, res) => {
             lastname: req.body.lastname,
             email: req.body.email,
             password: pswHash,
-            routines: {routineId}
+            routines: routineId
         });
 
         // Save user schema to DB

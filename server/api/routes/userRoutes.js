@@ -33,7 +33,7 @@ router.post("/create", async (req, res)=> {
 
         // Save user schema to DB
         const savedUser = await newUser.save();
-        return res.status(200).json({user: {}, isValid: isValid, errors: errors});
+        return res.status(200).json({user: newUser, isValid: isValid, errors: errors});
     } catch (err) {
         res.status(500).json({serverError: err.message, isValid: false});
     }

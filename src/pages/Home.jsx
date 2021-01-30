@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import Webcam from "../components/Webcam";
+// import Webcam from "../components/Webcam";
 
 import FormLabel from "@material-ui/core/FormLabel";
 import FormControl from "@material-ui/core/FormControl";
@@ -55,7 +55,7 @@ export default function Home() {
       <Grid container spacing={3}>
         <Grid item xs={7}>
           <Paper className={classes.paper}>
-            <Webcam onPredict={handlePredict}></Webcam>
+            {/* <Webcam onPredict={handlePredict}></Webcam> */}
           </Paper>
         </Grid>
 

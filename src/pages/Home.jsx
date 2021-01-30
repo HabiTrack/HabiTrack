@@ -3,18 +3,33 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-// import Webcam from "../components/Webcam";
+import Webcam from "../components/Webcam";
 
-import FormLabel from "@material-ui/core/FormLabel";
-import FormControl from "@material-ui/core/FormControl";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import Checkbox from "@material-ui/core/Checkbox";
-
-import Slider from "@material-ui/core/Slider";
 import HabitModal from "../components/HabitModal";
-import moment from "moment";
+
+import Checkbox from "../components/Checkbox";
+import Timed from "../components/Timed";
+import StrictTimed from "../components/StrictTimed";
+
+const habits = [
+  {
+    title: "Drink water",
+    trigger: "bottle",
+    type: "checkbox",
+  },
+  {
+    title: "Play tennis",
+    trigger: "toothbrush",
+    type: "timed",
+    duration: new Date().setHours(0, 1, 0, 0),
+  },
+  {
+    title: "Brush teeth",
+    trigger: "toothbrush",
+    type: "strict_timed",
+    duration: new Date(),
+  },
+];
 
 export default function Home() {
   const useStyles = makeStyles(theme => ({
@@ -30,76 +45,33 @@ export default function Home() {
 
   const classes = useStyles();
 
-  const handleChange = () => {};
-
-  const handleSlideChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  const handleStrictChange = (event, newValue) => {
-    setValue2(newValue);
-  };
-
-  const handlePredict = detections => {
-    detections.forEach(prediction => {
-      const text = prediction["class"];
-      if (!checked && text === "bottle") {
-        setChecked(true);
-      }
-      if (text === "bottle") {
-        setValue(prev => prev + 1);
-      }
-    });
-  };
-
-  const [checked, setChecked] = useState(false);
-
-  const [value, setValue] = useState(0);
-
-  const [value2, setValue2] = useState(0);
+  const [detections, setDetections] = useState([]);
 
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={7}>
           <Paper className={classes.paper}>
-            {/* <Webcam onPredict={handlePredict}></Webcam> */}
+            <Webcam
+              onPredict={detections => setDetections(detections)}
+            ></Webcam>
           </Paper>
         </Grid>
 
         <Grid item xs={5}>
           <Paper className={classes.paper}>
-            <FormControl component="fieldset" className={classes.formControl}>
-              <FormLabel component="legend">Habits</FormLabel>
-              <FormGroup>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={checked}
-                      onChange={handleChange}
-                      name="Be a person"
-                    />
-                  }
-                  label="Drink water"
-                />
-              </FormGroup>
-
-              <FormGroup>
-                <Slider
-                  value={value}
-                  onChange={handleSlideChange}
-                  aria-labelledby="continuous-slider"
-                />
-              </FormGroup>
-
-              <FormGroup>
-                <Slider
-                  value={value2}
-                  onChange={handleStrictChange}
-                  aria-labelledby="continuous-slider"
-                />
-              </FormGroup>
-            </FormControl>
+            {habits.map(habit => {
+              switch (habit.type) {
+                case "checkbox":
+                  return <Checkbox habit={habit} detections={detections} />;
+                case "timed":
+                  return <Timed habit={habit} detections={detections} />;
+                case "strict_timed":
+                  return <StrictTimed habit={habit} detections={detections} />;
+                default:
+                  return <></>;
+              }
+            })}
 
             <HabitModal></HabitModal>
           </Paper>

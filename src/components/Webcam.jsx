@@ -49,7 +49,7 @@ export default function ML({ onPredict }) {
   };
 
   useEffect(() => {
-    // runCoco();
+    runCoco();
   }, []);
 
   return (

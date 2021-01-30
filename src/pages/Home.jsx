@@ -1,91 +1,101 @@
-// Import dependencies
-import React, { useRef, useState, useEffect } from "react";
-import * as tf from "@tensorflow/tfjs";
-import * as cocossd from "@tensorflow-models/coco-ssd";
-import Webcam from "react-webcam";
-import { DrawRect } from "../utils";
+import React, { useState } from "react";
+
+import { makeStyles } from "@material-ui/core/styles";
+import Paper from "@material-ui/core/Paper";
+import Grid from "@material-ui/core/Grid";
+import Webcam from "../components/Webcam";
+
+import FormLabel from "@material-ui/core/FormLabel";
+import FormControl from "@material-ui/core/FormControl";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import Checkbox from "@material-ui/core/Checkbox";
+
+import Slider from "@material-ui/core/Slider";
 
 export default function Home() {
-  const webcamRef = useRef(null);
-  const canvasRef = useRef(null);
+  const useStyles = makeStyles(theme => ({
+    root: {
+      flexGrow: 1,
+      marginTop: theme.spacing(2),
+    },
+    paper: {
+      padding: theme.spacing(2),
+      color: theme.palette.text.secondary,
+    },
+  }));
 
-  // Main function
-  const runCoco = async () => {
-    const net = await cocossd.load();
-    console.log("Handpose model loaded.");
-    //  Loop and detect hands
-    setInterval(() => {
-      detect(net);
-    }, 10);
+  const classes = useStyles();
+
+  const handleChange = () => {};
+
+  const handleSlideChange = (event, newValue) => {
+    setValue(newValue);
   };
 
-  const detect = async net => {
-    // Check data is available
-    if (
-      typeof webcamRef.current !== "undefined" &&
-      webcamRef.current !== null &&
-      webcamRef.current.video.readyState === 4
-    ) {
-      // Get Video Properties
-      const video = webcamRef.current.video;
-      const videoWidth = webcamRef.current.video.videoWidth;
-      const videoHeight = webcamRef.current.video.videoHeight;
-
-      // Set video width
-      webcamRef.current.video.width = videoWidth;
-      webcamRef.current.video.height = videoHeight;
-
-      // Set canvas height and width
-      canvasRef.current.width = videoWidth;
-      canvasRef.current.height = videoHeight;
-
-      // Make Detections
-      const obj = await net.detect(video);
-
-      // Draw mesh
-      const ctx = canvasRef.current.getContext("2d");
-      DrawRect(obj, ctx);
-    }
+  const handlePredict = detections => {
+    detections.forEach(prediction => {
+      const text = prediction["class"];
+      if (!checked && text === "bottle") {
+        setChecked(true);
+      }
+      if (text === "bottle") {
+        setValue(prev => prev + 1);
+      }
+    });
   };
 
-  useEffect(() => {
-    runCoco();
-  }, []);
+  const [checked, setChecked] = useState(false);
+
+  const [value, setValue] = useState(0);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <Webcam
-          ref={webcamRef}
-          muted={true}
-          style={{
-            position: "absolute",
-            marginLeft: "auto",
-            marginRight: "auto",
-            left: 0,
-            right: 0,
-            textAlign: "center",
-            zindex: 9,
-            width: 640,
-            height: 480,
-          }}
-        />
+    <div className={classes.root}>
+      <Grid container spacing={3}>
+        <Grid item xs={7}>
+          <Paper className={classes.paper}>
+            <Webcam onPredict={handlePredict}></Webcam>
+          </Paper>
+        </Grid>
 
-        <canvas
-          ref={canvasRef}
-          style={{
-            position: "absolute",
-            marginLeft: "auto",
-            marginRight: "auto",
-            left: 0,
-            right: 0,
-            textAlign: "center",
-            zindex: 8,
-            width: 640,
-            height: 480,
-          }}
-        />
-      </header>
+        <Grid item xs={5}>
+          <Paper className={classes.paper}>
+            <FormControl component="fieldset" className={classes.formControl}>
+              <FormLabel component="legend">Habits</FormLabel>
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={checked}
+                      onChange={handleChange}
+                      name="Be a person"
+                    />
+                  }
+                  label="Drink water"
+                />
+              </FormGroup>
+
+              <FormGroup>
+                <Slider
+                  value={value}
+                  onChange={handleChange}
+                  aria-labelledby="continuous-slider"
+                />
+              </FormGroup>
+
+              <FormGroup>
+                <Slider
+                  value={value}
+                  onChange={handleSlideChange}
+                  aria-labelledby="continuous-slider"
+                />
+              </FormGroup>
+              <FormHelperText>Be careful</FormHelperText>
+            </FormControl>
+          </Paper>
+        </Grid>
+      </Grid>
     </div>
   );
 }

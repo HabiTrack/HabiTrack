@@ -77,7 +77,10 @@ router.post("/update", tokenauth.verifyToken, async (req, res) => {
 
         // Update password
         if (req.body.password) {
-            updates.password  = req.body.password;
+            // Hash the password
+            const salt = await bcrypt.genSalt();
+            const pswHash = await bcrypt.hash(req.body.password, salt);
+            updates.password  = pswHash;
         }
 
         // Update the user's info

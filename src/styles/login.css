@@ -1,0 +1,15 @@
+.center {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.fontSize {
+    font-size: 2rem !important;
+    margin-bottom: 1rem !important;
+}
+
+.blueLink {
+    color:blue !important;
+}

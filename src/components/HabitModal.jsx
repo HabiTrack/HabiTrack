@@ -8,16 +8,12 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { styled } from "@material-ui/core/styles";
 import { makeStyles } from "@material-ui/core/styles";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import Checkbox from "@material-ui/core/Checkbox";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/List";
-import ListItemText from "@material-ui/core/ListItemText";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import TimePicker from "./TimePicker";
+import { TimePicker } from "@material-ui/pickers";
+import moment from "moment";
 
 const CustomContent = styled(DialogContent)({
   overflowY: "unset",
@@ -30,7 +26,6 @@ const useStyles = makeStyles(theme => ({
   },
   textField: {
     width: "25ch",
-    marginTop: 0,
   },
   ageField: {
     width: "10ch",
@@ -40,29 +35,18 @@ const useStyles = makeStyles(theme => ({
     alignItems: "end",
   },
   formControl: {
-    marginTop: theme.spacing(1),
-    minWidth: 120,
+    display: "block",
+    width: "25ch",
+    marginTop: theme.spacing(2),
+    minWidth: 240,
   },
 
   time: {
-    marginTop: theme.spacing(2),
-    minWidth: 120,
+    display: "block",
+    margin: theme.spacing(2, 0, 1, 0),
+    minWidth: 240,
   },
 }));
-
-const conditions = [
-  "diabetes",
-  "neuro",
-  "hypertension",
-  "cancer",
-  "ortho",
-  "respiratory",
-  "cardiacs",
-  "kidney",
-  "blood",
-  "prostate",
-  "thyroid",
-];
 
 export default function FormDialog(props) {
   const classes = useStyles();
@@ -76,42 +60,50 @@ export default function FormDialog(props) {
     setOpen(false);
   };
 
-  const [firstName, setFirstName] = React.useState("");
-  const [lastName, setLastName] = React.useState("");
-  const [phoneNumber, setPhoneNumber] = React.useState("");
-  const [age, setAge] = React.useState("");
+  const [error, setError] = React.useState({});
+
+  const [title, setTitle] = React.useState("");
+  const [trigger, setTrigger] = React.useState("");
   const [type, setType] = React.useState("");
+  const [duration, setDuration] = React.useState(null);
 
-  const [gender, setGender] = React.useState("");
+  const isValid = habit => {
+    let valid = true;
 
-  const [checked, setChecked] = React.useState([]);
-
-  const handleToggle = value => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
+    const err = {};
+    for (const property in habit) {
+      if (!habit[property]) {
+        err[property] = true;
+        valid = false;
+      }
     }
+    setError(err);
 
-    setChecked(newChecked);
-  };
-
-  const handleChange = event => {
-    setAge(event.target.value);
-  };
-
-  const handleTypeChange = event => {
-    setType(event.target.value);
+    return valid;
   };
 
   const handleSubmit = () => {
-    const conditions = {};
-    checked.forEach(function (v) {
-      conditions[v] = 1;
-    });
+    const habit = {
+      title,
+      trigger,
+      type,
+      duration,
+    };
+
+    if (isValid(habit)) {
+      setTitle("");
+      setTrigger("");
+      setType("");
+      setDuration("");
+      setError({});
+      handleClose();
+    }
+  };
+
+  const handleTypeChange = e => {
+    const type = e.target.value;
+    type === "checkbox" && setDuration(null);
+    setType(e.target.value);
   };
 
   return (
@@ -135,55 +127,75 @@ export default function FormDialog(props) {
             Create your new daily habit here
           </DialogContentText>
 
-          <form
-            noValidate
-            autoComplete="off"
-            style={{
-              display: "flex",
-              alignItems: "start",
-              flexDirection: "column",
-            }}
-          >
+          <form noValidate autoComplete="off">
             <TextField
+              error={error.title}
               id="standard-basic"
               label="Title"
               margin="normal"
               className={classes.textField}
-              value={firstName}
-              onChange={e => setFirstName(e.target.value)}
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+              required
+              style={{ marginBottom: "0", marginTop: "0" }}
             />
 
-            <FormControl className={classes.formControl}>
+            <FormControl
+              className={classes.formControl}
+              required
+              error={error.trigger}
+            >
               <InputLabel id="demo-simple-select-label">
                 Trigger Object
               </InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={age}
-                onChange={handleChange}
+                value={trigger}
+                onChange={(e, newValue) => setTrigger(e.target.value)}
+                className={classes.textField}
               >
-                <MenuItem value={10}>Bottle</MenuItem>
-                <MenuItem value={20}>Tooth Brush</MenuItem>
+                <MenuItem value={"bottle"}>Bottle</MenuItem>
+                <MenuItem value={"toothbrush"}>Tooth Brush</MenuItem>
+                <MenuItem value={"book"}>Book</MenuItem>
               </Select>
             </FormControl>
 
-            <FormControl className={classes.formControl}>
+            <FormControl
+              className={classes.formControl}
+              required
+              error={error.type}
+            >
               <InputLabel id="demo-simple-select-label">Type</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={type}
                 onChange={handleTypeChange}
+                className={classes.textField}
               >
-                <MenuItem value={10}>Checkbox</MenuItem>
-                <MenuItem value={20}>Timer</MenuItem>
-                <MenuItem value={30}>Strict Timer (Beta)</MenuItem>
+                <MenuItem value={"checkbox"}>Checkbox</MenuItem>
+                <MenuItem value={"timer"}>Timer</MenuItem>
+                <MenuItem value={"strict_timer"}>Strict Timer (Beta)</MenuItem>
               </Select>
             </FormControl>
-            <FormControl className={classes.time}>
-              <TimePicker></TimePicker>
-            </FormControl>
+
+            {(type === "timer" || type === "strict_timer") && (
+              <FormControl className={classes.time}>
+                <TimePicker
+                  ampm={false}
+                  openTo="hours"
+                  views={["hours", "minutes", "seconds"]}
+                  format="HH:mm:ss"
+                  label="Duration"
+                  value={duration}
+                  onChange={setDuration}
+                  required
+                  initialFocusedDate={moment().startOf("day")}
+                  error={error.duration}
+                />
+              </FormControl>
+            )}
           </form>
         </CustomContent>
         <DialogActions>

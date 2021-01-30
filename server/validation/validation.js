@@ -20,7 +20,7 @@ exports.validateUserCreate = async (data) => {
         let existingUser = await User.findOne({email: data.email});
         if (existingUser) {
             errors.email = "Email already exists!";
-                isValid = false;
+            isValid = false;
         }
     }
 
@@ -113,4 +113,39 @@ exports.validateLogin = async (data) => {
     return {errors, isValid, user};
 }
 
+exports.validateUserUpdate = async (data) => {
+    let errors = {};
+    let isValid = true;
 
+    // Check if the email exists in the database
+    if (data.email) {
+        let existingUser = await User.findOne({email: data.email});
+        if (existingUser) {
+            errors.email = "Email already exists!";
+            isValid = false;
+        }
+    }
+
+    // Check if email is properly formatted
+    if(data.email) {
+        var format = /\S+@\S+\.\S+/;
+        if(!format.test(data.email)) {
+            errors.email = "Email is not properly formatted!";
+            isValid = false;
+        }
+    }
+
+    // Check password
+    if (data.password.length < 6) {
+        errors.password="Password must have at least 6 characters!";
+        isValid = false;
+    }
+
+    // Validate the password and password check match
+    if ((data.passwordCheck && data.password) && data.password !== data.passwordCheck) {
+        errors.passwordCheck = "The passwords do not match!";
+        isValid = false;
+    }
+
+    return {errors, isValid};
+}

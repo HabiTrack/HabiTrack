@@ -11,7 +11,7 @@ router.get("/test", (req, res) => {
 });
 
 // Create a new user
-router.post("/create", async (req, res)=> {
+router.post("/create", async (req, res) => {
     try {
         // Validation
         const {errors, isValid} = await validation.validateUserCreate(req.body);
@@ -33,9 +33,45 @@ router.post("/create", async (req, res)=> {
 
         // Save user schema to DB
         const savedUser = await newUser.save();
-        return res.status(200).json({user: newUser, isValid: isValid, errors: errors});
+        res.status(200).json({user: newUser, isValid: isValid, errors: errors});
     } catch (err) {
-        res.status(500).json({serverError: err.message, isValid: false});
+        console.error(err);
+        res.sendStatus(500);
+    }
+});
+
+// Update user information
+router.post("/update", async (req, res) => {
+    try {
+        const {errors, isValid} = await validation.validateUserUpdate(req.body);
+
+        if (!isValid) {
+            return res.status(400).json({isValid: isValid, errors: errors});
+        }
+
+        let updates = {};
+
+        if (req.body.firstname) {
+            updates.firstname = req.body.firstname;
+        }
+
+        if (req.body.lastname) {
+            updates.lastname = req.body.lastname;
+        }
+
+        if (req.body.email) {
+            updates.email  = req.body.email;
+        }
+
+        if (req.body.password) {
+            updates.password  = req.body.password;
+        }
+
+        await User.updateOne({_id: req.body.id}, updates);
+        res.sendStatus(200);
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
     }
 });
 

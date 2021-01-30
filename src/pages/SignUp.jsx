@@ -58,7 +58,7 @@ export default function SignUp() {
       <FormControl component="fieldset">
           <FormLabel className="center fontSize" component="legend">Sign Up</FormLabel>
           {isValid === true && <div className="biggerGreen">User Registered Successfully</div>}
-          {isValid === true && <div className="center"><Button className="blueLinkWithMargin" onClicke={handleSignUp}><u>Click Here to Login</u></Button></div>}
+          {isValid === true && <div className="center"><Button className="blueLinkWithMargin" onClick={handleSignUp}><u>Click Here to Login</u></Button></div>}
           {isValid === false && <div className="biggerRed"><u>Registration failed</u></div>}
           <FormGroup>
             {errors.firstname && <div className="redError">{errors.firstname}</div>}

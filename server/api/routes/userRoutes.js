@@ -43,26 +43,31 @@ router.post("/create", async (req, res) => {
 // Update user information
 router.post("/update", async (req, res) => {
     try {
+        // Validation
         const {errors, isValid} = await validation.validateUserUpdate(req.body);
-
         if (!isValid) {
             return res.status(400).json({isValid: isValid, errors: errors});
         }
 
+        // Updates JSON object
         let updates = {};
 
+        // Update first name
         if (req.body.firstname) {
             updates.firstname = req.body.firstname;
         }
 
+        // Update last name
         if (req.body.lastname) {
             updates.lastname = req.body.lastname;
         }
 
+        // Update email
         if (req.body.email) {
             updates.email  = req.body.email;
         }
 
+        // Update password
         if (req.body.password) {
             updates.password  = req.body.password;
         }
@@ -75,4 +80,14 @@ router.post("/update", async (req, res) => {
     }
 });
 
+// Hide user
+router.post("/hide", async (req, res) => {
+    try {
+        await User.updateOne({_id: req.body.id}, {isDeleted: true});
+        res.sendStatus(200);
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+    }
+});
 module.exports = router;

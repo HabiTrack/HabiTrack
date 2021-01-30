@@ -53,11 +53,11 @@ router.get("/gethabits", tokenauth.verifyToken, async (req, res) => {
 
         // Fetch the user's routine ids
         let userData = await User.findOne({_id: req.body.id}, {routines: 1});
-        let userRoutines = userData.rountines;
+        let userRoutines = userData.routines;
 
         // Create an array of rountine ids
         let conditions = [];
-        for (i = 0; i < userRoutines.length; i++) {
+        for (let i = 0; i < userRoutines.length; i++) {
             conditions.push({_id: userRoutines[i]});
         }
 
@@ -65,8 +65,8 @@ router.get("/gethabits", tokenauth.verifyToken, async (req, res) => {
         let routineObjs = await Routine.find({$or: conditions}, {date: 1, habits: 1});
 
         // Return rountines
-        return res.status(200).json({routineObjs});
-    } catch {
+        return res.status(200).json({routines: routineObjs});
+    } catch (err) {
         console.error(err);
         return res.sendStatus(500); 
     }

@@ -11,6 +11,10 @@ import TextField from "@material-ui/core/TextField";
 import SignUp from "../pages/SignUp";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import "../styles/login.css";
+
 export default function Login() {
   const history = useHistory();
   const handleClickOpen = () => {};
@@ -20,43 +24,35 @@ export default function Login() {
   };
 
   return (
-    <FormControl component="fieldset">
-      <FormLabel component="legend">Sign In</FormLabel>
-      <FormGroup>
-        <TextField id="username" label="username" variant="outlined" />
-        <TextField id="password" label="password" variant="outlined" />
-      </FormGroup>
-      <Button
-        variant="contained"
-        color="primary"
-        className="mr-2"
-        onClick={handleClickOpen}
-      >
-        Sign In
-      </Button>
 
-      {/* <Route path="/signup"></Route>
-        <Link to="/">Home</Link> */}
+    <Box component="span" m={1}>
+     <Grid container justify = "center">
+      <FormControl component="fieldset">
+          <FormLabel className="center fontSize" component="legend">Sign In</FormLabel>
+          <FormGroup>
+            <TextField id="username" label="username" variant="outlined" />
+            <TextField id="password" label="password" variant="outlined" />
+          </FormGroup>
+          <Button
+            variant="contained"
+            color="primary"
+            className="mr-2"
+            onClick={handleClickOpen}
+          >
+            Sign In
+          </Button>
+          {/* Sign up link */}
+          <Button
+            onClick={handleSignUp}
+            className="blueLink"
+          >
+            Don't have an account? Sign Up
+          </Button>
+        
+      </FormControl>
+    </Grid>
+    </Box>
 
-        <Button
-          onClick={handleSignUp}
-        >
-          Don't have an account? Sign Up
-        </Button>
-      
-      
-      {/* <Router>
-        <Switch>
-          <Route path="/signup">
-          <Link>test</Link>
-            <SignUp />
-          </Route>
-        </Switch>
-      </Router> */}
-
-    </FormControl>
-
-    
+   
   );
- 
 }

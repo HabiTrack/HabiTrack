@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -11,6 +11,8 @@ import Checkbox from "../components/Checkbox";
 import Timed from "../components/Timed";
 import StrictTimed from "../components/StrictTimed";
 
+import axios from "axios";
+
 const habits = [
   {
     title: "Drink water",
@@ -18,7 +20,7 @@ const habits = [
     type: "checkbox",
   },
   {
-    title: "Play tennis",
+    title: "Brush teeth",
     trigger: "toothbrush",
     type: "timed",
     duration: new Date().setHours(0, 1, 0, 0),
@@ -46,6 +48,26 @@ export default function Home() {
   const classes = useStyles();
 
   const [detections, setDetections] = useState([]);
+
+  useEffect(() => {
+    const token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDE1YzNkODU1ZWViZTEzYTAwMGY1MjIiLCJmaXJzdG5hbWUiOiJQYXVsIiwibGFzdG5hbWUiOiJCYXJhc2EiLCJlbWFpbCI6InBiQGVtYWlsLmNvbSIsImlhdCI6MTYxMjA0NzQxMX0.Rbx8UktbVnmUkfJi0AR3sdoZkbh5s8rZEZ2UezTsIPk";
+
+    axios.defaults.headers.get["Access-Control-Allow-Origin"] = "*";
+    axios.defaults.headers.get["Content-Type"] = "application/json";
+    axios.defaults.headers.get["Access-Control-Allow-Origin"] = "*";
+    axios.defaults.headers.get["Authorization"] = "Bearer " + token;
+
+    axios
+      .get("http://localhost:5000/api/routines/gethabits", {
+        params: {
+          id: "6015c1fadfa1e55a4428fdb6",
+        },
+      })
+      .then(res => {
+        console.log(res);
+      });
+  }, []);
 
   return (
     <div className={classes.root}>

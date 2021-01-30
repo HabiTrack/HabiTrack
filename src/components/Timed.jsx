@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Typography from "@material-ui/core/Typography";
@@ -25,8 +24,6 @@ export default function LinearWithValueLabel({ habit, detections }) {
   });
 
   const countdownDate = moment().add(duration);
-
-  const durClone = duration.clone();
 
   const [progress, setProgress] = React.useState(0);
 
@@ -69,10 +66,6 @@ export default function LinearWithValueLabel({ habit, detections }) {
 
   return (
     <div className={classes.root}>
-      <Button onClick={startTimer} variant="contained">
-        Default
-      </Button>
-
       <Box display="flex" alignItems="center">
         <Box width="100%" mr={1}>
           <LinearProgress variant="determinate" value={progress} />

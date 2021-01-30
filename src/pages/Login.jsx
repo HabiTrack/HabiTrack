@@ -58,10 +58,10 @@ export default function Login() {
       <FormControl component="fieldset">
           <FormLabel className="center fontSize" component="legend">Sign In</FormLabel>
           <FormGroup>
-            <TextField id="username" label="email" onChange={(e) => {setEmail(e.target.value)}} variant="outlined" />
-            {errors.email && <div>{errors.email}</div>}
-            <TextField id="password" label="password" onChange={(e) => {setPassword(e.target.value)}} variant="outlined" />
-            {errors.password && <div>{errors.password}</div>}
+            {errors.email && <div className="redError">{errors.email}</div>}
+            <TextField id="username" className="bottomMargin" label="email" onChange={(e) => {setEmail(e.target.value)}} variant="outlined" />
+            {errors.password && <div className="redError">{errors.password}</div>}
+            <TextField id="password" className="bottomMargin" label="password" onChange={(e) => {setPassword(e.target.value)}} variant="outlined" />
           </FormGroup>
           <Button
             variant="contained"

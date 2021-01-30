@@ -14,6 +14,7 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import { TimePicker } from "@material-ui/pickers";
 import moment from "moment";
+import axios from "axios";
 
 const CustomContent = styled(DialogContent)({
   overflowY: "unset",
@@ -90,7 +91,27 @@ export default function FormDialog(props) {
       duration,
     };
 
+    console.log("beeech");
+
+    const token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDE1YzNkODU1ZWViZTEzYTAwMGY1MjIiLCJmaXJzdG5hbWUiOiJQYXVsIiwibGFzdG5hbWUiOiJCYXJhc2EiLCJlbWFpbCI6InBiQGVtYWlsLmNvbSIsImlhdCI6MTYxMjA0NzQxMX0.Rbx8UktbVnmUkfJi0AR3sdoZkbh5s8rZEZ2UezTsIPk";
     if (isValid(habit)) {
+      console.log("yoo");
+
+      axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
+      axios.defaults.headers.post["Content-Type"] = "application/json";
+      axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
+      axios.defaults.headers.post["Authorization"] = "Bearer " + token;
+
+      axios
+        .post("http://localhost:5000/api/routines/addhabit", {
+          id: "6015c1fadfa1e55a4428fdb6",
+          ...habit,
+        })
+        .then(res => {
+          console.log(res);
+        });
+
       setTitle("");
       setTrigger("");
       setType("");

@@ -42,4 +42,34 @@ router.post("/addhabit", tokenauth.verifyToken, async (req, res)=>{
     }
 });
 
+// Get a user's habits
+router.get("/gethabits", tokenauth.verifyToken, async (req, res) => {
+    try {
+        // Check if an id was provided
+        if (!req.body.id) {
+            console.log("User id was not provided.");
+            return res.sendStatus(500);
+        }
+
+        // Fetch the user's routine ids
+        let userData = await User.findOne({_id: req.body.id}, {routines: 1});
+        let userRoutines = userData.rountines;
+
+        // Create an array of rountine ids
+        let conditions = [];
+        for (i = 0; i < userRoutines.length; i++) {
+            conditions.push({_id: userRoutines[i]});
+        }
+
+        // Fetch routines
+        let routineObjs = await Routine.find({$or: conditions});
+
+        // Return rountines
+        return res.status(200).json({routineObjs});
+    } catch {
+        console.error(err);
+        return res.sendStatus(500); 
+    }
+});
+
 module.exports = router;

@@ -13,6 +13,8 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import Checkbox from "@material-ui/core/Checkbox";
 
 import Slider from "@material-ui/core/Slider";
+import HabitModal from "../components/HabitModal";
+import moment from "moment";
 
 export default function Home() {
   const useStyles = makeStyles(theme => ({
@@ -34,6 +36,10 @@ export default function Home() {
     setValue(newValue);
   };
 
+  const handleStrictChange = (event, newValue) => {
+    setValue2(newValue);
+  };
+
   const handlePredict = detections => {
     detections.forEach(prediction => {
       const text = prediction["class"];
@@ -49,6 +55,8 @@ export default function Home() {
   const [checked, setChecked] = useState(false);
 
   const [value, setValue] = useState(0);
+
+  const [value2, setValue2] = useState(0);
 
   return (
     <div className={classes.root}>
@@ -79,20 +87,21 @@ export default function Home() {
               <FormGroup>
                 <Slider
                   value={value}
-                  onChange={handleChange}
+                  onChange={handleSlideChange}
                   aria-labelledby="continuous-slider"
                 />
               </FormGroup>
 
               <FormGroup>
                 <Slider
-                  value={value}
-                  onChange={handleSlideChange}
+                  value={value2}
+                  onChange={handleStrictChange}
                   aria-labelledby="continuous-slider"
                 />
               </FormGroup>
-              <FormHelperText>Be careful</FormHelperText>
             </FormControl>
+
+            <HabitModal></HabitModal>
           </Paper>
         </Grid>
       </Grid>

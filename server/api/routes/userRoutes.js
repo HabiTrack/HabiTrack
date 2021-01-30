@@ -5,6 +5,7 @@ const tokenauth = require('../../middleware/tokenauth');
 
 // User model
 const User = require("../../models/userModel");
+const { update } = require('../../models/userModel');
 
 // Test route
 router.get("/test", (req, res) => {
@@ -79,7 +80,12 @@ router.post("/update", tokenauth.verifyToken, async (req, res) => {
             updates.password  = req.body.password;
         }
 
-        await User.updateOne({_id: req.body.id}, updates);
+        // Update the user's info
+        if (Object.keys(updates).length > 0){
+            updates.dateupdated = Date.now();
+            await User.updateOne({_id: req.body.id}, updates);
+        }
+        
         res.sendStatus(200);
     } catch (err) {
         console.error(err);

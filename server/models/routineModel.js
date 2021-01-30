@@ -7,4 +7,4 @@ const routineSchema = new mongoose.Schema({
     dateupdated: {type: Date, default: Date.now}
 });
 
-module.exports = Routine = mongoose.model("routine", routineSchema);
+module.exports = Routine = mongoose.model("routines", routineSchema);

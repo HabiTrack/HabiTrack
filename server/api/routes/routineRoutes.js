@@ -6,11 +6,11 @@ const User = require('../../models/userModel');
 
 //test route for api habit routes
 router.get("/test", (req, res) => {
-    res.status(200).send("Welcome to the api: Habit routes")
+    res.status(200).send("Welcome to the api: routine routes")
 });
 
 //route for creating a new habit
-router.post("/create", tokenauth.verifyToken, async (req, res)=>{
+router.post("/addhabit", tokenauth.verifyToken, async (req, res)=>{
     try {
         //validate fields
         const {errors, isValid} = await validation.validateCreateHabit(req.body);
@@ -34,7 +34,7 @@ router.post("/create", tokenauth.verifyToken, async (req, res)=>{
         let currentRoutineID = routines[routines.length-1];
 
         //push the new habit onto the routine's habit array
-        Routine.updateOne({_id: currentRoutineID}, {$push: {habits: habit}});
+        await Routine.updateOne({_id: currentRoutineID}, {$push: {habits: habit}});
 
         return res.status(200).json({habit});
     } catch (err) {

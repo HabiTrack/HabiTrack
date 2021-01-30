@@ -149,3 +149,49 @@ exports.validateUserUpdate = async (data) => {
 
     return {errors, isValid};
 }
+
+exports.validateCreateHabit = async (data) => {
+    let errors = {};
+    let isValid = true;
+
+    //check if the user id is valid
+    if (!data.id) {
+        errors.id = "User id must be specified";
+        isValid = false;
+    }
+
+    //check the title is valid
+    if (!data.title) {
+        errors.title = "Title must be specified";
+        isValid = false;
+    }
+
+    //check the trigger is valid
+    if (!data.trigger) {
+        errors.trigger = "Trigger must be specified";
+        isValid = false;
+    }
+
+    //check the type is valid
+    if (!data.type) {
+        errors.type = "Type must be specified";
+        isValid = false;
+    }
+
+    //check the duration is valid
+    if (!data.duration) {
+        errors.duration = "Duration must be specified";
+        isValid = false;
+    }
+
+    //check that the user ID corresponds to a proper user
+    if (data.id) {
+        let existingUser = await User.findOne({id: data.id});
+        if (existingUser) {
+            errors.email = "Email already exists!";
+            isValid = false;
+        }
+    }
+
+    return {errors, isValid};
+}

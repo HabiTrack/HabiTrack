@@ -87,7 +87,7 @@ exports.validateLogin = async (data) => {
 
     //validate the password is present
     if (!data.password) {
-        errors.pasword = "Password cannot be empty";
+        errors.password = "Password cannot be empty";
         isValid = false; 
     }
 

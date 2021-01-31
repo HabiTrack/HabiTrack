@@ -70,6 +70,10 @@ export default function PrimarySearchAppBar(props) {
     history.push("/history");
   };
 
+  const handleAdmin = () => {
+    history.push("/admin");
+  }
+
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -113,6 +117,16 @@ export default function PrimarySearchAppBar(props) {
       >
         Dashboard
       </MenuItem>
+
+      <MenuItem 
+        onClick={() => {
+          handleMenuClose();
+          handleAdmin();
+        }}
+      >
+        Update Profile
+      </MenuItem>
+
       <MenuItem
         onClick={() => {
           handleMenuClose();

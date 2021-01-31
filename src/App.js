@@ -4,6 +4,7 @@ import History from "./pages/History";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import Admin from "./pages/Admin";
 import Axios from "axios";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
@@ -73,6 +74,9 @@ export default function App() {
             </Route>
             <Route path="/history">
               <History />
+            </Route>
+            <Route path="/admin">
+              <Admin />
             </Route>
           </Switch>
         </Router>

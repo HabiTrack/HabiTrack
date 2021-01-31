@@ -61,14 +61,14 @@ export default function Home() {
     axios.defaults.headers.get["Authorization"] = "Bearer " + token;
 
     axios
-      .get("http://localhost:5000/api/routines/gethabits", {
+      .get("http://localhost:5000/api/routines/getLatestRoutine", {
         params: {
           id: "6015c1fadfa1e55a4428fdb6",
         },
       })
       .then(res => {
-        console.log(res.data.routines[0].habits);
-        setHabits(res.data.routines[0].habits);
+        console.log(res.data.routine.habits);
+        setHabits(res.data.routine.habits);
       });
   }, []);
 

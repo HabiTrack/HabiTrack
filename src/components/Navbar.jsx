@@ -66,8 +66,8 @@ export default function PrimarySearchAppBar(props) {
     }
   };
 
-  const handleAdmin = () => {
-    history.push("/admin");
+  const handleHistory = () => {
+    history.push("/history");
   };
 
   const classes = useStyles();
@@ -116,10 +116,10 @@ export default function PrimarySearchAppBar(props) {
       <MenuItem
         onClick={() => {
           handleMenuClose();
-          handleAdmin();
+          handleHistory();
         }}
       >
-        Admin
+        History
       </MenuItem>
 
       <MenuItem

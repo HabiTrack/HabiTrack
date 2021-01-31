@@ -37,7 +37,7 @@ export default function LinearWithValueLabel({ habit, detections }) {
   let timerId;
 
   const startTimer = () => {
-    let shit = setInterval(() => {
+    let intId = setInterval(() => {
       const dif = countdownDate.diff(moment());
       if (dif >= 0) {
         setDisplay(dif);
@@ -64,17 +64,16 @@ export default function LinearWithValueLabel({ habit, detections }) {
           .then(res => {
             console.log(res);
           });
-        clearInterval(shit);
+        clearInterval(intId);
       }
     }, 100);
+    return intId;
   };
 
   useEffect(() => {
     detections.forEach(prediction => {
       const text = prediction["class"];
-      console.log("start", started);
       if (!started && !habit.completed && text === habit.trigger) {
-        console.log("aahh");
         started = true;
         timerId = startTimer();
       }

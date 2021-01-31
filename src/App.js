@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { StoreProvider } from "./contexts/StoreContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
+import Admin from "./pages/Admin";
 
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 
@@ -24,6 +25,7 @@ export default function App() {
               <PrivateRoute exact path="/" component={Home} />
               <Route path="/login" component={Login} />
               <Route path="/signup" component={SignUp} />
+              <Route path="/admin" component={Admin} />
               <PrivateRoute path="/history" component={History} />
             </Switch>
           </Router>

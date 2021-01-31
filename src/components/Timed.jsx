@@ -5,6 +5,9 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import moment from "moment";
 import Button from "@material-ui/core/Button";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 const useStyles = makeStyles({
   root: {
@@ -35,6 +38,7 @@ export default function LinearWithValueLabel({ habit, detections }) {
       setDis(diff);
 
       const progress = Math.floor((diff / duration.asMilliseconds()) * 100);
+
       setProgress(progress);
     }, 100);
   };
@@ -66,6 +70,7 @@ export default function LinearWithValueLabel({ habit, detections }) {
 
   return (
     <div className={classes.root}>
+      <Typography variant={"body1"}>{habit.title}</Typography>
       <Box display="flex" alignItems="center">
         <Box width="100%" mr={1}>
           <LinearProgress variant="determinate" value={progress} />

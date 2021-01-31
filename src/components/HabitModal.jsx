@@ -72,12 +72,29 @@ export default function FormDialog(props) {
     let valid = true;
 
     const err = {};
-    for (const property in habit) {
-      if (!habit[property]) {
-        err[property] = true;
-        valid = false;
-      }
+
+    if (!habit.title) {
+      console.log("here pls");
+      err.title = true;
+      valid = false;
     }
+    if (!habit.trigger) {
+      err.trigger = true;
+      valid = false;
+    }
+
+    if (!habit.type) {
+      err.type = true;
+      valid = false;
+    }
+
+    if (!habit.duration && habit.type !== "checkbox") {
+      err.duration = true;
+      valid = false;
+    }
+
+    console.log(err);
+
     setError(err);
 
     return valid;
@@ -110,6 +127,8 @@ export default function FormDialog(props) {
         })
         .then(res => {
           console.log(res);
+
+          props.onSave(res.data.habit);
         });
 
       setTitle("");

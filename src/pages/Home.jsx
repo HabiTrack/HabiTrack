@@ -13,25 +13,25 @@ import StrictTimed from "../components/StrictTimed";
 
 import axios from "axios";
 
-const habits = [
-  {
-    title: "Drink water",
-    trigger: "bottle",
-    type: "checkbox",
-  },
-  {
-    title: "Brush teeth",
-    trigger: "toothbrush",
-    type: "timed",
-    duration: new Date().setHours(0, 1, 0, 0),
-  },
-  {
-    title: "Brush teeth",
-    trigger: "toothbrush",
-    type: "strict_timed",
-    duration: new Date(),
-  },
-];
+// const habits = [
+//   {
+//     title: "Drink water",
+//     trigger: "bottle",
+//     type: "checkbox",
+//   },
+//   {
+//     title: "Brush teeth",
+//     trigger: "toothbrush",
+//     type: "timed",
+//     duration: new Date().setHours(0, 1, 0, 0),
+//   },
+//   {
+//     title: "Brush teeth",
+//     trigger: "toothbrush",
+//     type: "strict_timed",
+//     duration: new Date(),
+//   },
+// ];
 
 export default function Home() {
   const useStyles = makeStyles(theme => ({
@@ -49,6 +49,8 @@ export default function Home() {
 
   const [detections, setDetections] = useState([]);
 
+  const [habits, setHabits] = useState([]);
+
   useEffect(() => {
     const token =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDE1YzNkODU1ZWViZTEzYTAwMGY1MjIiLCJmaXJzdG5hbWUiOiJQYXVsIiwibGFzdG5hbWUiOiJCYXJhc2EiLCJlbWFpbCI6InBiQGVtYWlsLmNvbSIsImlhdCI6MTYxMjA0NzQxMX0.Rbx8UktbVnmUkfJi0AR3sdoZkbh5s8rZEZ2UezTsIPk";
@@ -65,9 +67,15 @@ export default function Home() {
         },
       })
       .then(res => {
-        console.log(res);
+        console.log(res.data.routines[0].habits);
+        setHabits(res.data.routines[0].habits);
       });
   }, []);
+
+  const handleSave = habit => {
+    console.log("here bud");
+    setHabits(prev => [...prev, habit]);
+  };
 
   return (
     <div className={classes.root}>
@@ -83,19 +91,22 @@ export default function Home() {
         <Grid item xs={5}>
           <Paper className={classes.paper}>
             {habits.map(habit => {
+              console.log("habit", habit.type);
               switch (habit.type) {
                 case "checkbox":
                   return <Checkbox habit={habit} detections={detections} />;
-                case "timed":
+                case "timer":
+                  console.log("yoo");
                   return <Timed habit={habit} detections={detections} />;
                 case "strict_timed":
                   return <StrictTimed habit={habit} detections={detections} />;
                 default:
+                  console.log("the hell");
                   return <></>;
               }
             })}
 
-            <HabitModal></HabitModal>
+            <HabitModal onSave={handleSave}></HabitModal>
           </Paper>
         </Grid>
       </Grid>

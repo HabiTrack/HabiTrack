@@ -6,7 +6,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import axios from "axios";
 
 export default function Check({ habit, detections }) {
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(habit.completed);
 
   useEffect(() => {
     detections.forEach(prediction => {
@@ -15,19 +15,22 @@ export default function Check({ habit, detections }) {
         const token =
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDE1YzNkODU1ZWViZTEzYTAwMGY1MjIiLCJmaXJzdG5hbWUiOiJQYXVsIiwibGFzdG5hbWUiOiJCYXJhc2EiLCJlbWFpbCI6InBiQGVtYWlsLmNvbSIsImlhdCI6MTYxMjA0NzQxMX0.Rbx8UktbVnmUkfJi0AR3sdoZkbh5s8rZEZ2UezTsIPk";
 
-        axios.defaults.headers.get["Access-Control-Allow-Origin"] = "*";
-        axios.defaults.headers.get["Content-Type"] = "application/json";
-        axios.defaults.headers.get["Access-Control-Allow-Origin"] = "*";
-        axios.defaults.headers.get["Authorization"] = "Bearer " + token;
+        axios.defaults.headers.put["Access-Control-Allow-Origin"] = "*";
+        axios.defaults.headers.put["Content-Type"] = "application/json";
+        axios.defaults.headers.put["Access-Control-Allow-Origin"] = "*";
+        axios.defaults.headers.put["Authorization"] = "Bearer " + token;
 
         axios
-          .get("http://localhost:5000/api/routines/gethabits", {
-            params: {
-              id: "6015c1fadfa1e55a4428fdb6",
+          .put("http://localhost:5000/api/routines/updateHabit", {
+            userId: "6015c1fadfa1e55a4428fdb6",
+            habit: {
+              ...habit,
+              completed: true,
             },
           })
           .then(res => {
-            console.log(res.data.routines[0].habits);
+            // send the updated record back to me
+            console.log(res);
           });
 
         setChecked(true);

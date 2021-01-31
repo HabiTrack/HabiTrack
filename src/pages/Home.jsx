@@ -73,7 +73,6 @@ export default function Home() {
   }, []);
 
   const handleSave = habit => {
-    console.log("here bud");
     setHabits(prev => [...prev, habit]);
   };
 
@@ -91,17 +90,14 @@ export default function Home() {
         <Grid item xs={5}>
           <Paper className={classes.paper}>
             {habits.map(habit => {
-              console.log("habit", habit.type);
               switch (habit.type) {
                 case "checkbox":
                   return <Checkbox habit={habit} detections={detections} />;
                 case "timer":
-                  console.log("yoo");
                   return <Timed habit={habit} detections={detections} />;
                 case "strict_timed":
                   return <StrictTimed habit={habit} detections={detections} />;
                 default:
-                  console.log("the hell");
                   return <></>;
               }
             })}

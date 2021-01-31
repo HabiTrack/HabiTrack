@@ -74,7 +74,6 @@ export default function FormDialog(props) {
     const err = {};
 
     if (!habit.title) {
-      console.log("here pls");
       err.title = true;
       valid = false;
     }
@@ -108,13 +107,9 @@ export default function FormDialog(props) {
       duration,
     };
 
-    console.log("beeech");
-
     const token =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDE1YzNkODU1ZWViZTEzYTAwMGY1MjIiLCJmaXJzdG5hbWUiOiJQYXVsIiwibGFzdG5hbWUiOiJCYXJhc2EiLCJlbWFpbCI6InBiQGVtYWlsLmNvbSIsImlhdCI6MTYxMjA0NzQxMX0.Rbx8UktbVnmUkfJi0AR3sdoZkbh5s8rZEZ2UezTsIPk";
     if (isValid(habit)) {
-      console.log("yoo");
-
       axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
       axios.defaults.headers.post["Content-Type"] = "application/json";
       axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";

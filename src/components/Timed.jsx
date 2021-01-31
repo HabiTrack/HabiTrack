@@ -8,50 +8,80 @@ import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import axios from "axios";
 
 const useStyles = makeStyles({
   root: {
     width: "100%",
   },
 });
+let started = false;
 
 export default function LinearWithValueLabel({ habit, detections }) {
   const classes = useStyles();
 
   const time = moment(habit.duration);
-
   const duration = moment.duration({
     seconds: time.second(),
     minutes: time.minute(),
     hours: time.hour(),
   });
+  const totalTime = duration.asMilliseconds();
 
   const countdownDate = moment().add(duration);
 
-  const [progress, setProgress] = React.useState(0);
+  const [progress, setProgress] = React.useState(habit.completed ? 0 : 100);
 
-  const [dis, setDis] = React.useState(duration.asMilliseconds());
+  const [display, setDisplay] = React.useState(totalTime);
+
+  let timerId;
 
   const startTimer = () => {
-    const timer = setInterval(() => {
-      const diff = countdownDate.diff(moment());
-      setDis(diff);
+    let shit = setInterval(() => {
+      const dif = countdownDate.diff(moment());
+      if (dif >= 0) {
+        setDisplay(dif);
+        setProgress(Math.floor((dif / totalTime) * 100));
+      } else {
+        console.log("bruh");
 
-      const progress = Math.floor((diff / duration.asMilliseconds()) * 100);
+        const token =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDE1YzNkODU1ZWViZTEzYTAwMGY1MjIiLCJmaXJzdG5hbWUiOiJQYXVsIiwibGFzdG5hbWUiOiJCYXJhc2EiLCJlbWFpbCI6InBiQGVtYWlsLmNvbSIsImlhdCI6MTYxMjA0NzQxMX0.Rbx8UktbVnmUkfJi0AR3sdoZkbh5s8rZEZ2UezTsIPk";
 
-      setProgress(progress);
+        axios.defaults.headers.put["Access-Control-Allow-Origin"] = "*";
+        axios.defaults.headers.put["Content-Type"] = "application/json";
+        axios.defaults.headers.put["Access-Control-Allow-Origin"] = "*";
+        axios.defaults.headers.put["Authorization"] = "Bearer " + token;
+
+        axios
+          .put("http://localhost:5000/api/routines/updateHabit", {
+            userId: "6015c1fadfa1e55a4428fdb6",
+            habit: {
+              ...habit,
+              completed: true,
+            },
+          })
+          .then(res => {
+            console.log(res);
+          });
+        clearInterval(shit);
+      }
     }, 100);
   };
 
   useEffect(() => {
-    let started = false;
     detections.forEach(prediction => {
       const text = prediction["class"];
-      if (!started && text === habit.trigger) {
+      console.log("start", started);
+      if (!started && !habit.completed && text === habit.trigger) {
         console.log("aahh");
         started = true;
-        startTimer();
+        timerId = startTimer();
       }
+
+      return timerId => {
+        clearInterval(timerId);
+      };
     });
   }, [detections]);
 
@@ -77,7 +107,7 @@ export default function LinearWithValueLabel({ habit, detections }) {
         </Box>
         <Box minWidth={35}>
           <Typography variant="body2" color="textSecondary">
-            {msToHMS(dis)}
+            {msToHMS(display)}
           </Typography>
         </Box>
       </Box>

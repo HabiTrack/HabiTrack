@@ -113,7 +113,7 @@ router.post("/update", tokenauth.verifyToken, async (req, res) => {
       await User.updateOne({ _id: req.body.id }, updates);
     }
 
-    res.sendStatus(200);
+    res.status(200).json({isValid: true});
   } catch (err) {
     console.error(err);
     res.sendStatus(500);

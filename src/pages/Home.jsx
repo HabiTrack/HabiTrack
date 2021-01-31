@@ -10,28 +10,8 @@ import HabitModal from "../components/HabitModal";
 import Checkbox from "../components/Checkbox";
 import Timed from "../components/Timed";
 import StrictTimed from "../components/StrictTimed";
-
-import axios from "axios";
-
-// const habits = [
-//   {
-//     title: "Drink water",
-//     trigger: "bottle",
-//     type: "checkbox",
-//   },
-//   {
-//     title: "Brush teeth",
-//     trigger: "toothbrush",
-//     type: "timed",
-//     duration: new Date().setHours(0, 1, 0, 0),
-//   },
-//   {
-//     title: "Brush teeth",
-//     trigger: "toothbrush",
-//     type: "strict_timed",
-//     duration: new Date(),
-//   },
-// ];
+import { useStore } from "../contexts/StoreContext";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Home() {
   const useStyles = makeStyles(theme => ({
@@ -51,24 +31,24 @@ export default function Home() {
 
   const [habits, setHabits] = useState([]);
 
+  const { axios, host } = useStore();
+
+  const { userData } = useAuth();
+
   useEffect(() => {
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDE1YzNkODU1ZWViZTEzYTAwMGY1MjIiLCJmaXJzdG5hbWUiOiJQYXVsIiwibGFzdG5hbWUiOiJCYXJhc2EiLCJlbWFpbCI6InBiQGVtYWlsLmNvbSIsImlhdCI6MTYxMjA0NzQxMX0.Rbx8UktbVnmUkfJi0AR3sdoZkbh5s8rZEZ2UezTsIPk";
-
-    axios.defaults.headers.get["Access-Control-Allow-Origin"] = "*";
-    axios.defaults.headers.get["Content-Type"] = "application/json";
-    axios.defaults.headers.get["Access-Control-Allow-Origin"] = "*";
-    axios.defaults.headers.get["Authorization"] = "Bearer " + token;
-
+    console.log("data", userData._id);
     axios
-      .get("http://localhost:5000/api/routines/getLatestRoutine", {
+      .get(host + "/api/routines/getLatestRoutine", {
         params: {
-          id: "6015c1fadfa1e55a4428fdb6",
+          id: userData._id,
         },
       })
       .then(res => {
         console.log(res.data.routine.habits);
         setHabits(res.data.routine.habits);
+      })
+      .catch(err => {
+        console.log(err);
       });
   }, []);
 

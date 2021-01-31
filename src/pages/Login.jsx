@@ -1,11 +1,11 @@
-import React, {useState, useContext} from "react";
+import React, { useState } from "react";
 import FormLabel from "@material-ui/core/FormLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import {useHistory} from "react-router-dom"
+import { useHistory } from "react-router-dom";
 import Axios from "axios";
-import UserContext from '../contexts/userContext';
+import { useAuth } from "../contexts/AuthContext";
 
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -18,7 +18,7 @@ import Box from "@material-ui/core/Box";
 import "../styles/login.css";
 
 export default function Login() {
-  //states 
+  //states
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [isValid, setIsValid] = useState();
@@ -26,17 +26,17 @@ export default function Login() {
 
   const history = useHistory();
 
-  const { setUserData, setToken } = useContext(UserContext);
+  const { setUserData, setToken } = useAuth();
 
   const handleSignUp = () => {
     history.push("/signup");
   };
 
-  const submit = async (e) => {
+  const submit = async e => {
     e.preventDefault();
     try {
       //insert new user into the system
-      const credentials = {email, password};
+      const credentials = { email, password };
       const response = await Axios.post(
         "http://localhost:5000/api/auth/login",
         credentials
@@ -45,11 +45,12 @@ export default function Login() {
       //store the token in local storage
       localStorage.setItem("auth-token", response.data.token);
       //set axios default header for the token
-      Axios.defaults.headers.common['Authorization'] = "Bearer " + response.data.token;
+      Axios.defaults.headers.common["Authorization"] =
+        "Bearer " + response.data.token;
 
       const userRes = await Axios.get(
         "http://localhost:5000/api/users/getbytoken",
-        {headers: { "authorization": "Bearer " + response.data.token}}
+        { headers: { authorization: "Bearer " + response.data.token } }
       );
 
       //set user context
@@ -61,19 +62,38 @@ export default function Login() {
       setIsValid(err.response.data.isValid);
       setErrors(err.response.data.errors);
     }
-  } 
+  };
 
   return (
-
     <Box component="span" m={1}>
-     <Grid container justify = "center">
-      <FormControl component="fieldset">
-          <FormLabel className="center fontSize" component="legend">Sign In</FormLabel>
+      <Grid container justify="center">
+        <FormControl component="fieldset">
+          <FormLabel className="center fontSize" component="legend">
+            Sign In
+          </FormLabel>
           <FormGroup>
             {errors.email && <div className="redError">{errors.email}</div>}
-            <TextField id="username" className="bottomMargin" label="email" onChange={(e) => {setEmail(e.target.value)}} variant="outlined" />
-            {errors.password && <div className="redError">{errors.password}</div>}
-            <TextField id="password" className="bottomMargin" label="password" onChange={(e) => {setPassword(e.target.value)}} variant="outlined" />
+            <TextField
+              id="username"
+              className="bottomMargin"
+              label="email"
+              onChange={e => {
+                setEmail(e.target.value);
+              }}
+              variant="outlined"
+            />
+            {errors.password && (
+              <div className="redError">{errors.password}</div>
+            )}
+            <TextField
+              id="password"
+              className="bottomMargin"
+              label="password"
+              onChange={e => {
+                setPassword(e.target.value);
+              }}
+              variant="outlined"
+            />
           </FormGroup>
           <Button
             variant="contained"
@@ -84,14 +104,10 @@ export default function Login() {
             Sign In
           </Button>
           {/* Sign up link */}
-          <Button
-            onClick={handleSignUp}
-            className="blueLink"
-          >
+          <Button onClick={handleSignUp} className="blueLink">
             Don't have an account? Sign Up
           </Button>
-        
-      </FormControl>
+        </FormControl>
       </Grid>
     </Box>
   );

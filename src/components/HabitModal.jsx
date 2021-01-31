@@ -14,7 +14,8 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import { TimePicker } from "@material-ui/pickers";
 import moment from "moment";
-import axios from "axios";
+import { useStore } from "../contexts/StoreContext";
+import { useAuth } from "../contexts/AuthContext";
 
 const CustomContent = styled(DialogContent)({
   overflowY: "unset",
@@ -99,6 +100,10 @@ export default function FormDialog(props) {
     return valid;
   };
 
+  const { axios, host } = useStore();
+
+  const { userData } = useAuth();
+
   const handleSubmit = () => {
     const habit = {
       title,
@@ -107,17 +112,10 @@ export default function FormDialog(props) {
       duration,
     };
 
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDE1YzNkODU1ZWViZTEzYTAwMGY1MjIiLCJmaXJzdG5hbWUiOiJQYXVsIiwibGFzdG5hbWUiOiJCYXJhc2EiLCJlbWFpbCI6InBiQGVtYWlsLmNvbSIsImlhdCI6MTYxMjA0NzQxMX0.Rbx8UktbVnmUkfJi0AR3sdoZkbh5s8rZEZ2UezTsIPk";
     if (isValid(habit)) {
-      axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
-      axios.defaults.headers.post["Content-Type"] = "application/json";
-      axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
-      axios.defaults.headers.post["Authorization"] = "Bearer " + token;
-
       axios
-        .post("http://localhost:5000/api/routines/addhabit", {
-          id: "6015c1fadfa1e55a4428fdb6",
+        .post(host + "/api/routines/addhabit", {
+          id: userData._id,
           ...habit,
         })
         .then(res => {

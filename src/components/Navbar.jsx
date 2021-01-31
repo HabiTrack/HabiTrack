@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -7,7 +7,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import Axios from "axios";
 
-import UserContext from "../contexts/userContext";
+import { useAuth } from "../contexts/AuthContext";
 
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
@@ -50,14 +50,14 @@ export default function PrimarySearchAppBar(props) {
   //const { currentUser, logout } = useAuth();
   const history = useHistory();
 
-  const {userData, setUserData, setToken} = useContext(UserContext);
+  const { userData, setUserData, setToken } = useAuth();
 
   const handleLogout = async () => {
     setError("");
 
     try {
       localStorage.removeItem("auth-token");
-      Axios.defaults.headers.common['Authorization'] = null;
+      Axios.defaults.headers.common["Authorization"] = null;
       setUserData(null);
       setToken(null);
       history.push("/login");

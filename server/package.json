@@ -4,6 +4,7 @@
   "description": "Habitrack back-end",
   "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Andrew, Braden, Jake, Paul",

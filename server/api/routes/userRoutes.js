@@ -19,8 +19,10 @@ router.get("/test", (req, res) => {
 //get a user
 router.get("/getbytoken", async (req, res) => {
   const bearerToken = req.headers["authorization"];
+  console.log("bear", bearerToken);
   const bearer = bearerToken.split(" ");
   const token = bearer[1].replace(",", "");
+  console.log("toke", token);
   let decoded = jwt.verify(token, process.env.JWT_SECRET);
   let user = await User.findOne({ _id: decoded._id });
   return res.status(200).json({ user: user });
@@ -112,7 +114,7 @@ router.post("/update", tokenauth.verifyToken, async (req, res) => {
       await User.updateOne({ _id: req.body.id }, updates);
     }
 
-    res.status(200).json({isValid: true});
+    res.status(200).json({ isValid: true });
   } catch (err) {
     console.error(err);
     res.sendStatus(500);

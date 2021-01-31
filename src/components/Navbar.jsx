@@ -56,8 +56,8 @@ export default function PrimarySearchAppBar(props) {
     setError("");
 
     try {
-      localStorage.removeItem("auth-token");
-      Axios.defaults.headers.common["Authorization"] = null;
+      // localStorage.removeItem("auth-token");
+      localStorage.clear();
       setUserData(null);
       setToken(null);
       history.push("/login");
@@ -72,7 +72,7 @@ export default function PrimarySearchAppBar(props) {
 
   const handleAdmin = () => {
     history.push("/admin");
-  }
+  };
 
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -118,7 +118,7 @@ export default function PrimarySearchAppBar(props) {
         Dashboard
       </MenuItem>
 
-      <MenuItem 
+      <MenuItem
         onClick={() => {
           handleMenuClose();
           handleAdmin();

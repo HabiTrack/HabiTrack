@@ -40,7 +40,7 @@ export default function Login() {
       );
 
       //store the token in local storage
-      localStorage.removeItem("auth-token");
+      localStorage.clear();
       localStorage.setItem("auth-token", response.data.token);
 
       const userRes = await Axios.get(

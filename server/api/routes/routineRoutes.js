@@ -52,28 +52,36 @@ router.post("/addhabit", tokenauth.verifyToken, async (req, res) => {
 });
 
 // Delete habit
-router.post("/deletehabit", tokenauth.verifyToken, async (req, res) => {
+router.post("/deleteHabit", tokenauth.verifyToken, async (req, res) => {
     try {
-        // Check if a routine id was provided
-        if (!req.body.routineId) {
-            console.log("Routine id was not provided.");
+        // Check if a user id was provided
+        if (!req.body.userId) {
+            console.log("User id was not provided.");
             return res.sendStatus(400);
         }
 
         // Check if a habit id was provided
         if (!req.body.habitId) {
-            console.log("Habit id was not provided.");
-            return res.sendStatus(400);
+          console.log("Habit id was not provided.");
+          return res.sendStatus(400);
         }
 
-        let routineData = await Routine.findOne({_id: req.body.routineId}, {habits: 1});
+        // Fetch routine id
+        let userData = await User.findOne({ _id: req.body.userId }, { routines: 1 });
+        let routines = userData.routines;
+        let routineId = routines[routines.length - 1];
+
+        // Fetch habits
+        let routineData = await Routine.findOne({_id: routineId}, {habits: 1});
         let habitsData = routineData.habits;
 
+        // Delete habit
         habitsData = habitsData.filter(function(item) {
-            return item.id !== req.body.habitId;
+            return item.id.toString() !== req.body.habitId;
         });
 
-        await Routine.updateOne({_id: req.body.routineId}, {habits: habitsData, dateupdated: Date.now()});
+        // Update habits
+        await Routine.updateOne({_id: routineId}, {habits: habitsData, dateupdated: Date.now()});
         res.sendStatus(200);
     } catch {
         console.error(err);

@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
+
+import UserContext from "../contexts/userContext";
 
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
@@ -42,10 +44,12 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function PrimarySearchAppBar() {
+export default function PrimarySearchAppBar(props) {
   const [error, setError] = useState("");
   //const { currentUser, logout } = useAuth();
   const history = useHistory();
+
+  const {userData} = useContext(UserContext);
 
   const handleLogout = async () => {
     setError("");
@@ -163,7 +167,7 @@ export default function PrimarySearchAppBar() {
             {true && (
               <>
                 <Typography className={classes.title} variant="body1" noWrap>
-                  bradencollingwood82@gmail.com
+                  {userData && userData.email}
                 </Typography>
                 <IconButton
                   edge="end"

@@ -15,10 +15,8 @@ import MomentUtils from "@date-io/moment";
 
 export default function App() {
   
-  const [userData, setUserData] = useState({
-    token: undefined, 
-    user: undefined
-  });
+  const [token, setToken] = useState(null);
+  const [userData, setUserData] = useState(null);
 
   //runs when the app is loaded
   useEffect(() => {
@@ -47,12 +45,11 @@ export default function App() {
           );
 
           //set the user data to the user that was retrieved
-          setUserData({
-              token,
-              user: userRes.data.user,
-          });
+          setUserData(userRes.data.user);
+          setToken(token);
       } else {
         setUserData(null);
+        setToken(null);
       }
     }
 
@@ -60,7 +57,7 @@ export default function App() {
   }, []);
 
   return (
-    <UserContext.Provider value={{userData, setUserData}}>
+    <UserContext.Provider value={{userData, setUserData, token, setToken}}>
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <Router>
           <Navbar></Navbar>

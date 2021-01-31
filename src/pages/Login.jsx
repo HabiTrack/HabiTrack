@@ -26,7 +26,7 @@ export default function Login() {
 
   const history = useHistory();
 
-  const { setUserData } = useContext(UserContext);
+  const { setUserData, setToken } = useContext(UserContext);
 
   const handleSignUp = () => {
     history.push("/signup");
@@ -53,10 +53,8 @@ export default function Login() {
       );
 
       //set user context
-      setUserData({
-        token: response.data.token,
-        user: userRes.data.user
-    });
+      setUserData(userRes.data.user);
+      setToken(response.data.token);
 
       history.push("/");
     } catch (err) {

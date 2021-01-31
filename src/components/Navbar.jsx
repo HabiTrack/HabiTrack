@@ -5,6 +5,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
+import Axios from "axios";
 
 import UserContext from "../contexts/userContext";
 
@@ -49,13 +50,16 @@ export default function PrimarySearchAppBar(props) {
   //const { currentUser, logout } = useAuth();
   const history = useHistory();
 
-  const {userData} = useContext(UserContext);
+  const {userData, setUserData, setToken} = useContext(UserContext);
 
   const handleLogout = async () => {
     setError("");
 
     try {
-      // await logout();
+      localStorage.removeItem("auth-token");
+      Axios.defaults.headers.common['Authorization'] = null;
+      setUserData(null);
+      setToken(null);
       history.push("/login");
     } catch {
       setError("Failed to log out");

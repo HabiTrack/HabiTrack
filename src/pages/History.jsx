@@ -18,9 +18,6 @@ const CalendarPrev = mobiscroll.CalendarPrev;
 const CalendarNav = mobiscroll.CalendarNav;
 const CalendarNext = mobiscroll.CalendarNext;
 
-
-
-
 export default function History() {
 
   const useStyles = makeStyles(theme => ({
@@ -42,124 +39,115 @@ export default function History() {
             <CalendarNav className="custom-nav" />
             <CalendarNext className="custom-next" />
     </React.Fragment>;
-}
+  }
 
-const [calendarType, setCalendarType] = React.useState('week');
+  const [startDate, setStartDate] = useState(new Date());
 
-const [startDate, setStartDate] = useState(new Date());
+  const [routinesData, setRoutinesData] = useState([]);
 
-const [routinesData, setRoutinesData] = useState([]);
+  // Set the routine data
+  useEffect(() => {
+    const token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDE1YzNkODU1ZWViZTEzYTAwMGY1MjIiLCJmaXJzdG5hbWUiOiJQYXVsIiwibGFzdG5hbWUiOiJCYXJhc2EiLCJlbWFpbCI6InBiQGVtYWlsLmNvbSIsImlhdCI6MTYxMjA0NzQxMX0.Rbx8UktbVnmUkfJi0AR3sdoZkbh5s8rZEZ2UezTsIPk";
 
-useEffect(() => {
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDE1YzNkODU1ZWViZTEzYTAwMGY1MjIiLCJmaXJzdG5hbWUiOiJQYXVsIiwibGFzdG5hbWUiOiJCYXJhc2EiLCJlbWFpbCI6InBiQGVtYWlsLmNvbSIsImlhdCI6MTYxMjA0NzQxMX0.Rbx8UktbVnmUkfJi0AR3sdoZkbh5s8rZEZ2UezTsIPk";
+    axios.defaults.headers.get["Access-Control-Allow-Origin"] = "*";
+    axios.defaults.headers.get["Content-Type"] = "application/json";
+    axios.defaults.headers.get["Access-Control-Allow-Origin"] = "*";
+    axios.defaults.headers.get["Authorization"] = "Bearer " + token;
 
-  axios.defaults.headers.get["Access-Control-Allow-Origin"] = "*";
-  axios.defaults.headers.get["Content-Type"] = "application/json";
-  axios.defaults.headers.get["Access-Control-Allow-Origin"] = "*";
-  axios.defaults.headers.get["Authorization"] = "Bearer " + token;
+    axios
+      .get("http://localhost:5000/api/routines/gethabits", {
+        params: {
+          id: "6015c1fadfa1e55a4428fdb6",
+        },
+      })
+      .then(res => {
+        setRoutinesData(res.data);
+      });
+  }, []);
 
-  axios
-    .get("http://localhost:5000/api/routines/gethabits", {
-      params: {
-        id: "6015c1fadfa1e55a4428fdb6",
-      },
-    })
-    .then(res => {
-      setRoutinesData(res.data);
-      console.log('one', res.data);
-    });
-}, []);
-
-let message;
-if (startDate.valueText) {
-  message = <div>
-    <div className="title">
-      {startDate.valueText} Habits 
+  // Side pannel message
+  let message;
+  if (startDate.valueText) {
+    message = <div>
+      <div className="title">
+        {startDate.valueText} Habits 
+      </div>
     </div>
-  </div>
-} else {
-  message = <div className="title">
-    Please select a date
-  </div>
-}
-
-
-const getColor = (numCompleted, totalHabits) => {
-  if (numCompleted == 0) {
-    return 'red';
-  } else if (numCompleted == totalHabits) {
-    return 'green';
   } else {
-    return '#FEE715FF';
+    message = <div className="title">
+      Please select a date
+    </div>
   }
-}
 
-const createRoutineList = () => {
-  console.log('two', routinesData);
-
-  const allMarkedDates = [];
-  const routines = routinesData.routines;
-  console.log('three', routines);
-
-  // loop throug the routines
-  if(routines){
-    for (var i = 0; i < routines.length; i++) {
-      // loop through the habits in this routine
-      let numCompleted = 0;
-      const totalHabits = routines[i].habits.length;
-      for (var j = 0; j < totalHabits; j++) {
-        if(routines[i].habits[j].completed){
-          numCompleted =  numCompleted + 1;
-        }
-      }
-      // create a markedDates object for the habit
-      const markedDate = {
-        date: new Date(routines[i].date),
-        color: getColor(numCompleted, totalHabits)
-      } ;
-      allMarkedDates.push(markedDate);
-    } 
+  // Get the colour of the days habit status
+  const getColor = (numCompleted, totalHabits) => {
+    if (numCompleted == 0) {
+      return 'red';
+    } else if (numCompleted == totalHabits) {
+      return 'green';
+    } else {
+      return '#FEE715FF';
+    }
   }
-  
 
-  console.log('four', allMarkedDates);
-  return allMarkedDates;
-}
+  // Create the list of dates that should be marked with their according status
+  const createRoutineList = () => {
+    const allMarkedDates = [];
+    const routines = routinesData.routines;
 
-const generateHabbitsList = () => {
-  const allHabits = [];
-  const routines = routinesData.routines;
-  // loop throug the routines
-  if(routines){
-    for (var i = 0; i < routines.length; i++) {
-      // Check for the routine date
-      const routineDate = moment(routines[i].date).format("YYYY/MM/DD");
-      console.log('mun', routineDate);
-      const selectedDate = moment(startDate.valueText).format("YYYY/MM/DD");
-      console.log('nano', selectedDate);
-      if(routineDate == selectedDate) {
-        console.log('we in baby!!!');
+    // loop throug the routines
+    if(routines){
+      for (var i = 0; i < routines.length; i++) {
         // loop through the habits in this routine
+        let numCompleted = 0;
         const totalHabits = routines[i].habits.length;
         for (var j = 0; j < totalHabits; j++) {
-          const habit = routines[i].habits[j];
-          allHabits.push({
-            title: habit.title,
-            completed: habit.completed ? 'Completed' : 'Incomplete'
-          });
-          console.log(habit.title, habit.completed);
+          if(routines[i].habits[j].completed){
+            numCompleted =  numCompleted + 1;
+          }
         }
-      }
-    } 
+        // create a markedDates object for the habit
+        const markedDate = {
+          date: new Date(routines[i].date),
+          color: getColor(numCompleted, totalHabits)
+        } ;
+        allMarkedDates.push(markedDate);
+      } 
+    }
+    return allMarkedDates;
   }
-  console.log(allHabits);
-  return allHabits;
-}
 
-return (
+  // Generate the list of habits and their status
+  const generateHabitsList = () => {
+    const allHabits = [];
+    const routines = routinesData.routines;
+    // loop through the routines
+    if(routines){
+      for (var i = 0; i < routines.length; i++) {
+        // Check for the routine date
+        const routineDate = moment(routines[i].date).format("YYYY/MM/DD");
+        const selectedDate = moment(startDate.valueText).format("YYYY/MM/DD");
+        if(routineDate == selectedDate) {
+          // loop through the habits in this routine
+          const totalHabits = routines[i].habits.length;
+          for (var j = 0; j < totalHabits; j++) {
+            const habit = routines[i].habits[j];
+            allHabits.push({
+              title: habit.title,
+              completed: habit.completed ? 'Completed' : 'Incomplete'
+            });
+          }
+        }
+      } 
+    }
+    return allHabits;
+  }
+
+  return (
     <div>
     <Grid container spacing={3}>
+        {/* Calandar that displays habit statuses for different days */}
         <Grid item xs={7}>
           <Paper className={classes.paper}>
           <Datepicker
@@ -169,48 +157,26 @@ return (
             display="inline"
             renderCalendarHeader={calendarHeaderCustom}
             marked = {createRoutineList()}
-          //   marked={[
-          //   {
-          //       date: new Date(2021, 1, 1),
-          //       color: 'red',
-          //   }, {
-          //       date: new Date(2021, 1, 2),
-          //       color: 'yellow',
-          //   }, {
-          //       date: new Date(2021, 1, 3),
-          //       color: 'green'
-          //   },
-          //   {
-          //       date: new Date(2021, 1, 4),
-          //       color: 'red',
-          //   }, {
-          //       date: new Date(2021, 1, 5),
-          //       color: 'yellow',
-          //   }, {
-          //       date: new Date(2021, 1, 6),
-          //       color: 'green'
-          //   }
-          // ]}
           />
           </Paper>
         </Grid>
 
+        {/* List of the selected days habits */}
         <Grid item xs={5}>
           <Paper className={classes.paper}>
-            {/* Here goes the stats */}
-            {/* {console.log(startDate.valueText)} */}
             {message}
             <div>
-              {generateHabbitsList().map(data => <p><b>{data.title}</b>: {data.completed}</p>)}
+              {generateHabitsList().map(data => <p><b>{data.title}</b>: {data.completed}</p>)}
             </div>
             {}
           </Paper>
         </Grid>
 
+        {/* Explains the statuses in the calandar */}
         <Grid item xs={7}>
-          <div className="red"> No habbits completed this day <br/></div>
-          <div className="yellow"> Some habbits completed this day <br/> </div>
-          <div className="green"> All Habits completed this day <br/> </div>
+          <div className="red"> No habits completed this day <br/></div>
+          <div className="yellow"> Some habits completed this day <br/> </div>
+          <div className="green"> All habits completed this day <br/> </div>
         </Grid>
        
       </Grid>

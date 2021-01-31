@@ -119,21 +119,34 @@ router.get("/gethabits", tokenauth.verifyToken, async (req, res) => {
 // Update habits
 router.put("/updateHabit", tokenauth.verifyToken, async (req, res) => {
   try {
-    if (!req.query.userId) {
+    // Check if user id was provided
+    if (!req.body.userId) {
       console.log("User id was not provided.");
       return res.sendStatus(400);
     }
 
-    if (!req.query.habit) {
+    // Check if habit was provided
+    if (!req.body.habit) {
       console.log("Habit object was not provided.");
       return res.sendStatus(400);
     }
 
-    let routineData = await User.findOne({ _id: req.query.userId }, { routines: 1 });
-    let routines = routineData.routines;
+    // Fetch routine id
+    let userData = await User.findOne({ _id: req.body.userId }, { routines: 1 });
+    let routines = userData.routines;
     let routineId = routines[routines.length - 1];
 
-    await Routine.updateOne({_id: routineId}, {habits: req.query.habit});
+    // Fetch habits
+    let routineData = await Routine.findOne({_id: routineId}, {habits: 1});
+    let habitsData = routineData.habits;
+
+    // Replace habit
+    const index = habitsData.array.findIndex(function(item) {
+      return item.id === req.body.habit.id;
+    });
+    habitsData[index] = req.body.habit;
+    await Routine.updateOne({_id: routineId}, {habits: habitsData, dateupdated: Date.now()});
+
     res.sendStatus(200);
   } catch (err) {
     console.error(err);

@@ -2,6 +2,7 @@ const router = require('express').Router();
 const validation = require('../../validation/validation');
 const bcrypt = require('bcryptjs');
 const tokenauth = require('../../middleware/tokenauth');
+const jwt = require("jsonwebtoken");
 
 // User model
 const User = require("../../models/userModel");
@@ -13,6 +14,16 @@ const Routine = require("../../models/routineModel");
 // Test route
 router.get("/test", (req, res) => {
     res.status(200).send("Welcome to the api: User Routes");
+});
+
+//get a user
+router.get("/getbytoken", async (req, res) => {
+    const bearerToken = req.headers['authorization'];
+    const bearer = bearerToken.split(' ');
+    const token = bearer[3];
+    let decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let user = await User.findOne({_id: decoded._id});
+    return res.status(200).json({user: user});
 });
 
 // Create a new user

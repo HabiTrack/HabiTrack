@@ -54,8 +54,14 @@ router.post("/addhabit", tokenauth.verifyToken, async (req, res) => {
 // Delete habit
 router.post("/deletehabit", tokenauth.verifyToken, async (req, res) => {
     try {
-        // Check if an id was provided
+        // Check if a routine id was provided
         if (!req.body.routineId) {
+            console.log("Routine id was not provided.");
+            return res.sendStatus(500);
+        }
+
+        // Check if a habit id was provided
+        if (!req.body.habitId) {
             console.log("Habit id was not provided.");
             return res.sendStatus(500);
         }
@@ -64,7 +70,7 @@ router.post("/deletehabit", tokenauth.verifyToken, async (req, res) => {
         let habitsData = routineData.habits;
 
         habitsData = habitsData.filter(function(item) {
-            return item.id !== req.body.routineId;
+            return item.id !== req.body.habitId;
         });
 
         await Routine.updateOne({_id: req.body.routineId}, {habits: habitsData, dateupdated: Date.now()});

@@ -22,13 +22,13 @@ export function AuthProvider({ children }) {
       //if the token is not stored in the local storage, set the token as being empty.
       //this will allow the check for if the token is valid to return false rather than a server error
       if (token === null) {
-        localStorage.setItem("auth-token", "");
+        //localStorage.setItem("auth-token", "");
         token = "";
         console.log("notoken");
       }
 
       const tokenRes = await axios.post(
-        "http://localhost:5000/api/auth/validatetoken",
+        "https://habitrack8.herokuapp.com/api/auth/validatetoken",
         null,
         { headers: { Authorization: "Bearer " + token } }
       );
@@ -39,7 +39,7 @@ export function AuthProvider({ children }) {
         console.log(token);
 
         const userRes = await axios.get(
-          "http://localhost:5000/api/users/getbytoken",
+          "https://habitrack8.herokuapp.com/api/users/getbytoken",
           { headers: { authorization: "Bearer " + token } }
         );
 

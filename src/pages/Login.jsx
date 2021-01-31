@@ -35,22 +35,27 @@ export default function Login() {
       //insert new user into the system
       const credentials = { email, password };
       const response = await Axios.post(
-        "http://localhost:5000/api/auth/login",
+        "https://habitrack8.herokuapp.com/api/auth/login",
         credentials
       );
 
       //store the token in local storage
       localStorage.clear();
+      console.log("toke", response.data.token);
       localStorage.setItem("auth-token", response.data.token);
 
+      const bear = "Bearer " + response.data.token;
+
       const userRes = await Axios.get(
-        "http://localhost:5000/api/users/getbytoken",
-        { headers: { authorization: "Bearer " + response.data.token } }
+        "https://habitrack8.herokuapp.com/api/users/getbytoken",
+        { headers: { authorization: bear } }
       );
 
       //set user context
       setUserData(userRes.data.user);
       setToken(response.data.token);
+      Axios.defaults.headers.common["Authorization"] =
+        "Bearer " + response.data.token;
 
       history.push("/");
     } catch (err) {

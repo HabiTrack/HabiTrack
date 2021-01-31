@@ -15,11 +15,11 @@ export function StoreProvider({ children }) {
   axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
   axios.defaults.headers.common["Content-Type"] = "application/json";
   axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
-  axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+  //axios.defaults.headers.common["Authorization"] = "Bearer " + token;
 
   const value = {
     axios: axios,
-    host: "http://localhost:5000",
+    host: "https://habitrack8.herokuapp.com",
   };
 
   return (

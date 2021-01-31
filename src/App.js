@@ -20,7 +20,7 @@ export default function App() {
     user: undefined
   });
 
-  //runs when the app is first loaded
+  //runs when the app is loaded
   useEffect(() => {
 
     //have to define an async function inside the use effect since back-end using async
@@ -52,7 +52,7 @@ export default function App() {
               user: userRes.data.user,
           });
       } else {
-        console.log("redirect the user to login");
+        setUserData(null);
       }
     }
 

@@ -1,10 +1,11 @@
-import React, {useState} from "react";
+import React, {useState, useContext} from "react";
 import FormLabel from "@material-ui/core/FormLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import {useHistory} from "react-router-dom"
 import Axios from "axios";
+import UserContext from '../contexts/userContext';
 
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -25,6 +26,8 @@ export default function Login() {
 
   const history = useHistory();
 
+  const { setUserData } = useContext(UserContext);
+
   const handleSignUp = () => {
     history.push("/signup");
   };
@@ -43,6 +46,17 @@ export default function Login() {
       localStorage.setItem("auth-token", response.data.token);
       //set axios default header for the token
       Axios.defaults.headers.common['Authorization'] = "Bearer " + response.data.token;
+
+      const userRes = await Axios.get(
+        "http://localhost:5000/api/users/getbytoken",
+        {headers: { "authorization": "Bearer " + response.data.token}}
+      );
+
+      //set user context
+      setUserData({
+        token: response.data.token,
+        user: userRes.data.user
+    });
 
       history.push("/");
     } catch (err) {

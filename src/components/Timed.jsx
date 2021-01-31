@@ -4,11 +4,8 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import moment from "moment";
-import Button from "@material-ui/core/Button";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import axios from "axios";
+import { useStore } from "../contexts/StoreContext";
+import { useAuth } from "../contexts/AuthContext";
 
 const useStyles = makeStyles({
   root: {
@@ -36,6 +33,9 @@ export default function LinearWithValueLabel({ habit, detections }) {
 
   let timerId;
 
+  const { axios, host } = useStore();
+  const { userData } = useAuth();
+
   const startTimer = () => {
     let intId = setInterval(() => {
       const dif = countdownDate.diff(moment());
@@ -43,19 +43,9 @@ export default function LinearWithValueLabel({ habit, detections }) {
         setDisplay(dif);
         setProgress(Math.floor((dif / totalTime) * 100));
       } else {
-        console.log("bruh");
-
-        const token =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDE1YzNkODU1ZWViZTEzYTAwMGY1MjIiLCJmaXJzdG5hbWUiOiJQYXVsIiwibGFzdG5hbWUiOiJCYXJhc2EiLCJlbWFpbCI6InBiQGVtYWlsLmNvbSIsImlhdCI6MTYxMjA0NzQxMX0.Rbx8UktbVnmUkfJi0AR3sdoZkbh5s8rZEZ2UezTsIPk";
-
-        axios.defaults.headers.put["Access-Control-Allow-Origin"] = "*";
-        axios.defaults.headers.put["Content-Type"] = "application/json";
-        axios.defaults.headers.put["Access-Control-Allow-Origin"] = "*";
-        axios.defaults.headers.put["Authorization"] = "Bearer " + token;
-
         axios
-          .put("http://localhost:5000/api/routines/updateHabit", {
-            userId: "6015c1fadfa1e55a4428fdb6",
+          .put(host + "/api/routines/updateHabit", {
+            userId: userData.id,
             habit: {
               ...habit,
               completed: true,

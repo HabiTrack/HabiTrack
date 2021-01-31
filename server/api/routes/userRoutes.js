@@ -20,8 +20,7 @@ router.get("/test", (req, res) => {
 router.get("/getbytoken", async (req, res) => {
   const bearerToken = req.headers["authorization"];
   const bearer = bearerToken.split(" ");
-  console.log("bear", bearer);
-  const token = bearer[1];
+  const token = bearer[1].replace(",", "");
   let decoded = jwt.verify(token, process.env.JWT_SECRET);
   let user = await User.findOne({ _id: decoded._id });
   return res.status(200).json({ user: user });

@@ -2,20 +2,17 @@ import React, { useState } from "react";
 import FormLabel from "@material-ui/core/FormLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { useHistory } from "react-router-dom";
 import Axios from "axios";
-import { useAuth } from "../contexts/AuthContext";
 
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
-import SignUp from "../pages/SignUp";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import "../styles/login.css";
+
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Login() {
   //states
@@ -43,10 +40,8 @@ export default function Login() {
       );
 
       //store the token in local storage
+      localStorage.removeItem("auth-token");
       localStorage.setItem("auth-token", response.data.token);
-      //set axios default header for the token
-      Axios.defaults.headers.common["Authorization"] =
-        "Bearer " + response.data.token;
 
       const userRes = await Axios.get(
         "http://localhost:5000/api/users/getbytoken",

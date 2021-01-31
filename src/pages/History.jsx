@@ -9,7 +9,6 @@ import moment from "moment";
 
 import { useStore } from "../contexts/StoreContext";
 import { useAuth } from "../contexts/AuthContext";
-import { useFormatDate } from "react-calendar-toolkit";
 
 mobiscroll.setOptions({
   theme: "ios",
@@ -45,8 +44,6 @@ export default function History() {
     );
   };
 
-  const [calendarType, setCalendarType] = React.useState("week");
-
   const [startDate, setStartDate] = useState(new Date());
 
   const [routinesData, setRoutinesData] = useState([]);
@@ -64,10 +61,10 @@ export default function History() {
       })
       .then(res => {
         setRoutinesData(res.data);
-        console.log("one", res.data);
       });
   }, []);
 
+  // Side pannel message
   let message;
   if (startDate.valueText) {
     message = (
@@ -79,6 +76,7 @@ export default function History() {
     message = <div className="title">Please select a date</div>;
   }
 
+  // Get the colour of the days habit status
   const getColor = (numCompleted, totalHabits) => {
     if (numCompleted == 0) {
       return "red";
@@ -89,12 +87,10 @@ export default function History() {
     }
   };
 
+  // Create the list of dates that should be marked with their according status
   const createRoutineList = () => {
-    console.log("two", routinesData);
-
     const allMarkedDates = [];
     const routines = routinesData.routines;
-    console.log("three", routines);
 
     // loop throug the routines
     if (routines) {
@@ -115,24 +111,20 @@ export default function History() {
         allMarkedDates.push(markedDate);
       }
     }
-
-    console.log("four", allMarkedDates);
     return allMarkedDates;
   };
 
-  const generateHabbitsList = () => {
+  // Generate the list of habits and their status
+  const generateHabitsList = () => {
     const allHabits = [];
     const routines = routinesData.routines;
-    // loop throug the routines
+    // loop through the routines
     if (routines) {
       for (var i = 0; i < routines.length; i++) {
         // Check for the routine date
         const routineDate = moment(routines[i].date).format("YYYY/MM/DD");
-        console.log("mun", routineDate);
         const selectedDate = moment(startDate.valueText).format("YYYY/MM/DD");
-        console.log("nano", selectedDate);
         if (routineDate == selectedDate) {
-          console.log("we in baby!!!");
           // loop through the habits in this routine
           const totalHabits = routines[i].habits.length;
           for (var j = 0; j < totalHabits; j++) {
@@ -141,18 +133,17 @@ export default function History() {
               title: habit.title,
               completed: habit.completed ? "Completed" : "Incomplete",
             });
-            console.log(habit.title, habit.completed);
           }
         }
       }
     }
-    console.log(allHabits);
     return allHabits;
   };
 
   return (
     <div>
       <Grid container spacing={3}>
+        {/* Calandar that displays habit statuses for different days */}
         <Grid item xs={7}>
           <Paper className={classes.paper}>
             <Datepicker
@@ -162,39 +153,16 @@ export default function History() {
               display="inline"
               renderCalendarHeader={calendarHeaderCustom}
               marked={createRoutineList()}
-              //   marked={[
-              //   {
-              //       date: new Date(2021, 1, 1),
-              //       color: 'red',
-              //   }, {
-              //       date: new Date(2021, 1, 2),
-              //       color: 'yellow',
-              //   }, {
-              //       date: new Date(2021, 1, 3),
-              //       color: 'green'
-              //   },
-              //   {
-              //       date: new Date(2021, 1, 4),
-              //       color: 'red',
-              //   }, {
-              //       date: new Date(2021, 1, 5),
-              //       color: 'yellow',
-              //   }, {
-              //       date: new Date(2021, 1, 6),
-              //       color: 'green'
-              //   }
-              // ]}
             />
           </Paper>
         </Grid>
 
+        {/* List of the selected days habits */}
         <Grid item xs={5}>
           <Paper className={classes.paper}>
-            {/* Here goes the stats */}
-            {/* {console.log(startDate.valueText)} */}
             {message}
             <div>
-              {generateHabbitsList().map(data => (
+              {generateHabitsList().map(data => (
                 <p>
                   <b>{data.title}</b>: {data.completed}
                 </p>
@@ -204,18 +172,19 @@ export default function History() {
           </Paper>
         </Grid>
 
+        {/* Explains the statuses in the calandar */}
         <Grid item xs={7}>
           <div className="red">
             {" "}
-            No habbits completed this day <br />
+            No habits completed this day <br />
           </div>
           <div className="yellow">
             {" "}
-            Some habbits completed this day <br />{" "}
+            Some habits completed this day <br />{" "}
           </div>
           <div className="green">
             {" "}
-            All Habits completed this day <br />{" "}
+            All habits completed this day <br />{" "}
           </div>
         </Grid>
       </Grid>

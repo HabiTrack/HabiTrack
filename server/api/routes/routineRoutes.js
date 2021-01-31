@@ -85,8 +85,6 @@ router.post("/deletehabit", tokenauth.verifyToken, async (req, res) => {
 router.get("/gethabits", tokenauth.verifyToken, async (req, res) => {
   try {
     // Check if an id was provided
-
-    console.log(req.query);
     if (!req.query.id) {
       console.log("User id was not provided.");
       return res.sendStatus(400);

@@ -32,8 +32,27 @@ router.post("/login", async (req, res)=> {
 });
 
 //validate token valid route
-router.post("/validatetoken", tokenauth.verifyToken, (req, res) => {
-    return res.status(200).json({isValid: true});
+router.post("/validatetoken", (req, res) => {
+    const bearerToken = req.headers['authorization'];
+    let isValid;
+    if (typeof bearerToken !== 'undefined') {
+        const bearer = bearerToken.split(' ');
+        const token = bearer[1];
+
+        //verify 
+        jwt.verify(token, process.env.JWT_SECRET, (err, auth)=>{
+            if (err) {
+                isValid = false;
+            } else {
+                isValid = true;
+            }
+        });
+    } else{
+        console.log("hit this");
+        isValid = false;
+    }
+
+    return res.status(200).json({isValid: isValid});
 });  
 
 module.exports = router;

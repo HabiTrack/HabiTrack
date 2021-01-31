@@ -28,7 +28,6 @@ export default function Check({ habit, detections }) {
           })
           .then(res => {
             console.log(res.data.routines[0].habits);
-            setHabits(res.data.routines[0].habits);
           });
 
         setChecked(true);

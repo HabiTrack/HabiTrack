@@ -139,9 +139,11 @@ router.put("/updateHabit", tokenauth.verifyToken, async (req, res) => {
     let habitsData = routineData.habits;
 
     // Replace habit
-    const index = habitsData.array.findIndex(function(item) {
-      return item.id === req.body.habit.id;
+    const index = habitsData.findIndex(function(item) {
+      console.log("Item Id", item.id);
+      return item.id.toString() === req.body.habit.id;
     });
+     
     habitsData[index] = req.body.habit;
     await Routine.updateOne({_id: routineId}, {habits: habitsData, dateupdated: Date.now()});
 

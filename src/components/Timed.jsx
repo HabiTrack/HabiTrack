@@ -45,7 +45,7 @@ export default function LinearWithValueLabel({ habit, detections }) {
       } else {
         axios
           .put(host + "/api/routines/updateHabit", {
-            userId: userData.id,
+            userId: userData._id,
             habit: {
               ...habit,
               completed: true,

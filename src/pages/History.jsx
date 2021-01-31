@@ -91,7 +91,7 @@ const getColor = (numCompleted, totalHabits) => {
   } else if (numCompleted == totalHabits) {
     return 'green';
   } else {
-    return 'yellow';
+    return '#FEE715FF';
   }
 }
 
@@ -201,7 +201,7 @@ return (
             {/* {console.log(startDate.valueText)} */}
             {message}
             <div>
-              {generateHabbitsList().map(data => <p>{data.title}: {data.completed}</p>)}
+              {generateHabbitsList().map(data => <p><b>{data.title}</b>: {data.completed}</p>)}
             </div>
             {}
           </Paper>
